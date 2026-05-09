@@ -1,0 +1,65 @@
+/* Elemental design tokens — mirrors tailwind.config.ts as CSS custom properties.
+   Use these when raw CSS or non-Tailwind contexts need brand values. */
+
+:root {
+  /* Colors */
+  --color-brand-navy: #03045e;
+  --color-brand-blue: #0077b6;
+  --color-brand-green: #068466;
+  --color-brand-cyan: #f1fdff;
+  --color-brand-mint: #d6eedb;
+  --color-brand-orange: #fc9f5b;
+  --color-cream: #f8f6f4;
+
+  /* Walkthrough bookend backgrounds */
+  --bg-step-setup: var(--color-brand-cyan);
+  --bg-step-form: var(--color-brand-blue);
+  --bg-step-apply: var(--color-brand-mint);
+  --bg-landing: var(--color-cream);
+
+  /* Type scale (rem, 16px base) */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 2rem;
+  --text-step-mobile: 2rem;       /* 32px — Setup/Apply title, mobile */
+  --text-step-mobile-lg: 2.25rem; /* 36px — Form title, mobile */
+  --text-step-desktop: 3.25rem;   /* 52px — Setup/Apply title, desktop */
+  --text-step-desktop-lg: 3.75rem;/* 60px — Form title, desktop */
+
+  /* Spacing scale (4px base) */
+  --space-0: 0;
+  --space-px: 1px;
+  --space-0_5: 0.125rem;
+  --space-1: 0.25rem;
+  --space-1_5: 0.375rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-14: 3.5rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+
+  /* Radii */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Motion */
+  --ease-step: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --duration-fast: 200ms;
+  --duration-step-out: 220ms;
+  --duration-step-in: 320ms;
+}

@@ -1,29 +1,54 @@
 "use client";
 import { useRef } from "react";
+import { clsx } from "clsx";
 import { WistiaPlayer } from "./wistia-player";
 
 type VideoDialogProps = {
   mediaId: string;
   title: string;
   buttonLabel?: string;
+  /** "text" (default) renders an inline mono CTA. "icon" renders a circular play-icon button. */
+  variant?: "text" | "icon";
+  className?: string;
 };
 
 export function VideoDialog({
   mediaId,
   title,
   buttonLabel = "Watch video",
+  variant = "text",
+  className,
 }: VideoDialogProps) {
   const ref = useRef<HTMLDialogElement>(null);
+  const ariaLabel = variant === "icon" ? `Watch: ${title}` : undefined;
 
   return (
     <>
       <button
         type="button"
         onClick={() => ref.current?.showModal()}
-        className="inline-flex items-center gap-1.5 font-mono text-xs font-semibold uppercase tracking-eyebrow text-brand-blue transition-colors hover:text-brand-navy"
+        aria-label={ariaLabel}
+        className={clsx(
+          variant === "icon"
+            ? "inline-flex h-9 w-9 flex-none items-center justify-center rounded-full bg-white text-brand-blue shadow-sm transition hover:scale-105 hover:bg-white/95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-blue"
+            : "inline-flex items-center gap-1.5 font-mono text-xs font-semibold uppercase tracking-eyebrow text-brand-blue transition-colors hover:text-brand-navy",
+          className,
+        )}
       >
-        <span aria-hidden="true" className="text-[0.6rem]">▶</span>
-        {buttonLabel}
+        {variant === "icon" ? (
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 10 12"
+            className="h-3 w-3 translate-x-px fill-current"
+          >
+            <path d="M0 0l10 6-10 6V0z" />
+          </svg>
+        ) : (
+          <>
+            <span aria-hidden="true" className="text-[0.6rem]">▶</span>
+            {buttonLabel}
+          </>
+        )}
       </button>
 
       <dialog

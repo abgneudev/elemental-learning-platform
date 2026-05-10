@@ -7,19 +7,18 @@ import {
   WistiaPlayer,
   buttonStyles,
 } from "@/components/primitives";
+import { Eyebrow } from "@/components/primitives/eyebrow";
 import {
   ExtraInfoCard,
   PageTimeline,
-  PeerQuote,
   QuickCheck,
   StepHero,
   StepSummary,
+  TabbedPhase,
+  type TabbedPhaseStep,
 } from "@/components/walkthrough";
 import { walkthrough } from "@/lib/content";
-import {
-  renderCallouts,
-  renderQuote,
-} from "@/components/walkthrough/render";
+import { renderDarkCallouts } from "@/components/walkthrough/render";
 
 const apply = walkthrough.apply;
 
@@ -27,6 +26,25 @@ export const metadata: Metadata = {
   title: `${apply.hero.title.replace(/\.$/, "")} — Elemental Apply`,
   description: apply.hero.lead,
 };
+
+const patientTimeline: Array<{ label: string; detail: string }> = [
+  {
+    label: "Day 1 · 24 h non-stop",
+    detail: "The stent stays in to stabilise the blood clot.",
+  },
+  {
+    label: "Day 2–4 · daily clean",
+    detail: "Patient removes once per day, then places it back.",
+  },
+  {
+    label: "Day 5+ · pain-free out",
+    detail: "Stent comes out once the donor site is comfortable.",
+  },
+  {
+    label: "Billing · D5988",
+    detail: "Surgical-splint code. $150–$250 mark-up per stent.",
+  },
+];
 
 export default function ApplyPage() {
   return (
@@ -41,10 +59,11 @@ export default function ApplyPage() {
           apply: "/walkthrough/apply",
         }}
       />
-  
+
       <PageTimeline
         sections={[
           { id: "apply-hero", label: "Overview" },
+          { id: "patient-timeline", label: "5-Day Timeline" },
           { id: "surgical-protocol", label: "Surgical Protocol" },
           { id: "patient-handoff", label: "Patient Handoff" },
           { id: "workflow", label: "Workflow" },
@@ -81,41 +100,54 @@ export default function ApplyPage() {
           </Container>
         </section>
 
+        {/* ── 5-day patient timeline (mirrors Setup's Starter Kit grid) ── */}
+        <section id="patient-timeline" className="border-b border-white/10 bg-brand-navy">
+          <Container size="xl" className="py-20 sm:py-28">
+            <div className="flex flex-col gap-10">
+              <p className="font-heading text-lg font-bold text-white sm:text-xl">
+                What the patient lives with — five days, four handoffs:
+              </p>
+              <div className="flex flex-col gap-6 sm:flex-row sm:gap-6">
+                {patientTimeline.map((item) => (
+                  <div key={item.label} className="flex flex-1 flex-col gap-3">
+                    <div className="aspect-[4/3] w-full rounded-xl bg-white/10" />
+                    <p className="font-heading text-base font-bold leading-tight tracking-tight text-white">
+                      {item.label}
+                    </p>
+                    <p className="text-sm leading-snug text-white/65">
+                      {item.detail}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Container>
+        </section>
+
         {/* ── Step A: Surgical Protocol ─────────────────────────────────── */}
         <section id="surgical-protocol" className="border-b border-brand-navy/8 bg-cream">
           <Container size="xl" className="py-20 sm:py-28">
-            <DetailSection section={apply.details[0]} index={0} />
+            <ApplyTabbedSection section={apply.details[0]} phaseNumber={1} />
           </Container>
         </section>
 
-        {/* ── Step B: Patient Handoff ───────────────────────────────────────── */}
+        {/* ── Step B: Patient Handoff ───────────────────────────────────── */}
         <section id="patient-handoff" className="border-b border-brand-navy/8 bg-cream">
           <Container size="xl" className="py-20 sm:py-28">
-            <DetailSection section={apply.details[1]} index={1} />
+            <ApplyTabbedSection section={apply.details[1]} phaseNumber={2} />
           </Container>
         </section>
 
-        {/* ── Step C: Workflow ──────────────────────────────────────────────── */}
+        {/* ── Step C: Workflow ──────────────────────────────────────────── */}
         <section id="workflow" className="border-b border-brand-navy/8 bg-cream">
           <Container size="xl" className="py-20 sm:py-28">
-            <DetailSection section={apply.details[2]} index={2} />
+            <ApplyTabbedSection section={apply.details[2]} phaseNumber={3} />
           </Container>
         </section>
 
-        {/* ── Peer quote (dark navy) ────────────────────────────────────── */}
-        <section className="border-b border-white/10 bg-brand-navy">
-          <Container size="xl" className="py-20 sm:py-24">
-            <PeerQuote
-              tone="dark"
-              quote={renderQuote(apply.peerQuote.quote)}
-              author={apply.peerQuote.author}
-            />
-          </Container>
-        </section>
-
-        {/* ── Extra info + step nav (cream) ─────────────────────────────── */}
-        <section className="bg-cream">
-          <Container size="xl" className="flex flex-col gap-10 py-20 sm:py-24">
+        {/* ── Extra info + step nav (brand-blue) ───────────────────────── */}
+        <section className="bg-brand-blue">
+          <Container size="xl" className="flex flex-col gap-16 py-24 sm:py-32">
             <ExtraInfoCard
               label={apply.extraInfo.label}
               title={apply.extraInfo.title}
@@ -123,7 +155,7 @@ export default function ApplyPage() {
               items={apply.extraInfo.items}
               cta={apply.extraInfo.cta}
             />
-            <BottomNav prev={apply.nav.prev} next={apply.nav.next} />
+            <BottomNav prev={apply.nav.prev} />
           </Container>
         </section>
       </main>
@@ -131,129 +163,98 @@ export default function ApplyPage() {
   );
 }
 
-function DetailSection({ section, index }: { section: typeof apply.details[number]; index: number }) {
+function ApplyTabbedSection({
+  section,
+  phaseNumber,
+}: {
+  section: typeof apply.details[number];
+  phaseNumber: number;
+}) {
+  const steps: TabbedPhaseStep[] =
+    section.microSteps?.map((step) => ({
+      title: step.title,
+      bullets: step.bullets,
+      callouts:
+        step.callouts && step.callouts.length > 0
+          ? renderDarkCallouts(step.callouts)
+          : undefined,
+      imageLabel: typeof step.title === "string" ? step.title : undefined,
+    })) ?? [];
+
   return (
-    <section
-      aria-labelledby={`${section.id}-title`}
+    <TabbedPhase
+      phaseNumber={phaseNumber}
+      title={section.title}
+      description={section.lead}
+      steps={steps}
     >
-      <header className="flex flex-col gap-3">
-        <div className="flex items-center gap-3">
-          <span
-            aria-hidden="true"
-            className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-brand-red font-heading text-xl font-bold text-white"
-          >
-            {String.fromCharCode(65 + index)}
-          </span>
-          <h2
-            id={`${section.id}-title`}
-            className="font-heading text-2xl font-semibold leading-tight text-brand-navy sm:text-3xl"
-          >
-            {section.title}
-          </h2>
-        </div>
-        {section.lead && (
-          <p className="max-w-prose text-base leading-snug text-brand-navy/75">
-            {section.lead}
-          </p>
-        )}
-      </header>
-
-      {section.wistiaMediaId && (
-        <div className="mt-6">
-          <WistiaPlayer
-            mediaId={section.wistiaMediaId}
-            title={section.wistiaTitle ?? section.title}
-          />
-        </div>
-      )}
-
-      {section.microSteps && section.microSteps.length > 0 && (
-        <div className="relative mt-8">
-          <span
-            aria-hidden="true"
-            className="absolute inset-0 translate-x-2 translate-y-2 rounded-md bg-brand-navy/15"
-          />
-          <ol className="relative flex flex-col divide-y divide-brand-navy/10 rounded-md border border-brand-navy/15 bg-white p-6 sm:p-9">
-            {section.microSteps.map((step, idx) => (
-              <li
-                key={step.index}
-                className={clsx(
-                  "grid grid-cols-[auto_1fr] items-start gap-x-4 gap-y-2 sm:gap-x-6",
-                  idx === 0
-                    ? "pb-5 sm:pb-6"
-                    : idx === section.microSteps!.length - 1
-                      ? "pt-5 sm:pt-6"
-                      : "py-5 sm:py-6",
-                )}
-              >
-                <span
-                  aria-hidden="true"
-                  className="mt-0.5 inline-flex flex-none items-baseline font-mono text-xs font-semibold tracking-eyebrow text-brand-blue"
-                >
-                  / {step.index}
-                </span>
-                <p className="font-heading text-base font-medium leading-snug text-brand-navy sm:text-lg">
-                  {step.title}
-                </p>
-                {step.bullets && step.bullets.length > 0 && (
-                  <ul className="col-start-2 flex list-disc flex-col gap-1 pl-4 text-sm leading-snug text-brand-navy/80 marker:text-brand-navy/35">
-                    {step.bullets.map((b, j) => (
-                      <li key={j}>{b}</li>
-                    ))}
-                  </ul>
-                )}
-                {step.callouts && step.callouts.length > 0 && (
-                  <div className="col-start-2 mt-1 flex flex-col gap-3">
-                    {renderCallouts(step.callouts)}
-                  </div>
-                )}
-              </li>
-            ))}
-          </ol>
-        </div>
-      )}
-
       {section.quickCheck && (
-        <div className="mt-6">
-          <QuickCheck
-            label={section.quickCheck.label}
-            title={section.quickCheck.title}
-            items={section.quickCheck.items}
-          />
-        </div>
+        <QuickCheck
+          label={section.quickCheck.label}
+          title={section.quickCheck.title}
+          items={section.quickCheck.items}
+        />
       )}
-    </section>
+    </TabbedPhase>
   );
 }
 
-function BottomNav({
-  prev,
-  next,
-}: {
-  prev?: { href: string; label: string };
-  next?: { href: string; label: string };
-}) {
+/* ── Bottom nav: Back button + completion card pointing to shop ────────
+   Mirrors the Form/Setup pairing of `filled-orange` Back button + a navy
+   payoff card. Apply is the terminal step, so the card is a shop CTA. */
+
+function BottomNav({ prev }: { prev?: { href: string; label: string } }) {
   return (
     <nav
       aria-label="Step navigation (bottom)"
-      className="flex items-center justify-between gap-3 border-t border-brand-navy/10 pt-6"
+      className="flex items-stretch gap-4"
     >
-      {prev ? (
-        <Link href={prev.href} className={buttonStyles("quiet", "md")}>
-          <span aria-hidden="true">←</span>
-          <span>{prev.label}</span>
+      {prev && (
+        <Link
+          href={prev.href}
+          className={buttonStyles("filled-orange", "md")}
+        >
+          <span aria-hidden="true" className="text-xl font-black">
+            ←
+          </span>
+          Back
         </Link>
-      ) : (
-        <span />
       )}
-      {next ? (
-        <Link href={next.href} className={buttonStyles("primary", "md")}>
-          <span>{next.label}</span>
-          <span aria-hidden="true" className="arrow">→</span>
-        </Link>
-      ) : (
-        <span />
-      )}
+      <DoneCard
+        href="https://shop.withelemental.com/products/perioplast-intro-kit"
+        className="flex-1"
+      />
     </nav>
+  );
+}
+
+function DoneCard({ href, className }: { href: string; className?: string }) {
+  return (
+    <Link
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={clsx(
+        "group block w-full rounded-md bg-brand-navy p-8 transition-colors hover:bg-brand-navy/90 sm:p-10",
+        className,
+      )}
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col gap-2">
+          <Eyebrow tone="cream" size="md">
+            You&apos;re set
+          </Eyebrow>
+          <h3 className="font-heading text-2xl font-bold tracking-tight text-white sm:text-3xl">
+            Order the Starter Kit and make your first stent.
+          </h3>
+        </div>
+        <span
+          aria-hidden="true"
+          className="flex-none self-center text-3xl font-black leading-none text-white transition-transform group-hover:translate-x-2"
+        >
+          →
+        </span>
+      </div>
+    </Link>
   );
 }

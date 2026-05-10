@@ -10,19 +10,19 @@ import {
 } from "@/components/primitives";
 import {
   ExtraInfoCard,
+  UpNextCard,
   GreatStentReference,
   PageTimeline,
-  PeerQuote,
-  PhaseSection,
   QuickCheck,
   SampleCallout,
   StepHero,
   StepSummary,
+  TabbedPhase,
   ToFinishCard,
   WhatToLookOutFor,
   type GreatStentCriterion,
-  type PhaseMicroStep,
   type QuickCheckItem,
+  type TabbedPhaseStep,
   type WhatToLookOutForItem,
 } from "@/components/walkthrough";
 import { walkthrough } from "@/lib/content";
@@ -31,12 +31,11 @@ import {
   icons,
   lookoutImages,
   phase1CheckImages,
+  phaseThumbnails,
   trimCheckImages,
   videos,
   type CdnImage,
 } from "@/lib/assets";
-import { renderQuote, renderCallouts } from "@/components/walkthrough/render";
-
 const form = walkthrough.form;
 
 export const metadata: Metadata = {
@@ -249,7 +248,7 @@ export default function FormPage() {
 
         {/* ── Sample callout (cream) ────────────────────────────────────── */}
         <section className="border-b border-brand-navy/8 bg-cream">
-          <Container size="xl" className="flex flex-col gap-12 py-16 sm:gap-14 sm:py-20">
+          <Container size="xl" className="flex flex-col gap-12 py-20 sm:gap-14 sm:py-28">
             <SampleCallout
               title={form.sampleCallout.title}
               cta={form.sampleCallout.cta}
@@ -279,6 +278,21 @@ export default function FormPage() {
               }
             : undefined;
 
+          const description = (
+            <>
+              {phase.description}
+              {heroVideo && (
+                <div className="mt-3">
+                  <VideoDialog
+                    mediaId={heroVideo.mediaId}
+                    title={heroVideo.title}
+                    buttonLabel="Watch phase overview"
+                  />
+                </div>
+              )}
+            </>
+          );
+
           return (
             <section
               key={phase.phaseNumber}
@@ -286,26 +300,17 @@ export default function FormPage() {
               className="border-b border-brand-navy/8 bg-cream"
             >
               <Container size="xl" className="py-20 sm:py-28">
-                <PhaseSection
+                <TabbedPhase
                   phaseNumber={phase.phaseNumber}
                   title={phase.title}
                   time={phase.time}
-                  description={
-                    <>
-                      {phase.description}
-                      {heroVideo && (
-                        <div className="mt-6">
-                          <WistiaPlayer
-                            mediaId={heroVideo.mediaId}
-                            title={heroVideo.title}
-                            aspect="16x9"
-                          />
-                        </div>
-                      )}
-                    </>
-                  }
-                  microSteps={phase.microSteps.map((step, i) =>
-                    toPhaseMicroStep(step, microStepVideos[phase.phaseNumber]?.[i])
+                  description={description}
+                  steps={phase.microSteps.map((step, i) =>
+                    toTabbedPhaseStep(
+                      step,
+                      microStepVideos[phase.phaseNumber]?.[i],
+                      phaseThumbnail(phase.phaseNumber, i),
+                    ),
                   )}
                   beforeCheck={
                     phase.toFinish ? (
@@ -324,7 +329,7 @@ export default function FormPage() {
                       items={decoratedQuickCheck.items}
                     />
                   )}
-                </PhaseSection>
+                </TabbedPhase>
               </Container>
             </section>
           );
@@ -352,20 +357,9 @@ export default function FormPage() {
           </Container>
         </section>
 
-        {/* ── Peer quote (dark navy) ────────────────────────────────────── */}
-        <section className="border-b border-white/10 bg-brand-navy">
-          <Container size="xl" className="py-20 sm:py-24">
-            <PeerQuote
-              tone="dark"
-              quote={renderQuote(form.peerQuote.quote)}
-              author={form.peerQuote.author}
-            />
-          </Container>
-        </section>
-
-        {/* ── Extra info + step nav (cream) ─────────────────────────────── */}
-        <section className="bg-cream">
-          <Container size="xl" className="flex flex-col gap-10 py-20 sm:py-24">
+        {/* ── Extra info + step nav (brand-blue) ───────────────────────── */}
+        <section className="bg-brand-blue">
+          <Container size="xl" className="flex flex-col gap-16 py-24 sm:py-32">
             <ExtraInfoCard
               label={form.extraInfo.label}
               title={form.extraInfo.title}
@@ -373,7 +367,11 @@ export default function FormPage() {
               items={form.extraInfo.items}
               cta={form.extraInfo.cta}
             />
-            <BottomNav prev={form.nav.prev} next={form.nav.next} />
+            <BottomNav
+              prev={form.nav.prev}
+              next={form.nav.next}
+              nextHeroTitle={walkthrough.apply.hero.title}
+            />
           </Container>
         </section>
       </main>
@@ -381,58 +379,83 @@ export default function FormPage() {
   );
 }
 
-function toPhaseMicroStep(
+/** Per-step thumbnail per phase — aligns 1:1 with `microStepVideos`. */
+function phaseThumbnail(
+  phaseNumber: number,
+  stepIndex: number,
+): CdnImage | undefined {
+  const t = phaseThumbnails;
+  const map: Record<number, ReadonlyArray<{ src: string; alt: string }>> = {
+    1: [
+      { src: t.p1.s1, alt: "Heat one sheet of PerioPlast in the cup." },
+      { src: t.p1.s2, alt: "Pull the softened material off the forceps." },
+    ],
+    2: [
+      { src: t.p1.s3, alt: "Press the warm material into a thin disk." },
+      { src: t.p1.s4, alt: "Sit behind the patient to position the disk." },
+      { src: t.p1.s5, alt: "Place the disk on the palate — posterior and buccal." },
+    ],
+    3: [
+      { src: t.p2.s1, alt: "Press the disk firmly onto the occlusal surfaces." },
+      { src: t.p2.s2, alt: "Wrap the material around the vestibular sides." },
+      { src: t.p2.s3, alt: "Press firmly onto the palate until tightly adapted." },
+      { src: t.p2.s4, alt: "Patient bites in full occlusion for 30 seconds." },
+      { src: t.p2.s5, alt: "Re-adapt the stent to the palatal contour." },
+    ],
+    4: [
+      { src: t.p3.s1, alt: "Let the stent set in-situ until firm." },
+      { src: t.p3.s2, alt: "Dunk the stent in cold water to set harder." },
+      { src: t.p3.s3, alt: "Trim any overextensions with scissors." },
+      { src: t.p3.s4, alt: "Patient fits the stent and confirms comfort." },
+      { src: t.p3.s5, alt: "Final stent — ready for placement." },
+    ],
+  };
+  return map[phaseNumber]?.[stepIndex];
+}
+
+function toTabbedPhaseStep(
   step: typeof form.phases[number]["microSteps"][number],
-  video?: { mediaId: string; title: string },
-): PhaseMicroStep {
-  const textCallout =
-    step.callouts && step.callouts.length > 0 ? (
-      <div className="flex flex-col gap-3">{renderCallouts(step.callouts)}</div>
-    ) : null;
-
-  const callout =
-    video || textCallout ? (
-      <div className="flex flex-col gap-2">
-        {video && <VideoDialog mediaId={video.mediaId} title={video.title} />}
-        {textCallout}
-      </div>
-    ) : undefined;
-
+  video: { mediaId: string; title: string } | undefined,
+  thumbnail: CdnImage | undefined,
+): TabbedPhaseStep {
   return {
     title: step.title,
     bullets: step.bullets,
-    callout,
+    video,
+    image: thumbnail ? (
+      <Image
+        src={thumbnail.src}
+        alt={thumbnail.alt}
+        fill
+        sizes="(min-width: 1024px) 38vw, 90vw"
+        className="object-cover"
+      />
+    ) : undefined,
+    imageLabel: typeof step.title === "string" ? step.title : undefined,
   };
 }
 
 function BottomNav({
   prev,
   next,
+  nextHeroTitle,
 }: {
   prev?: { href: string; label: string };
   next?: { href: string; label: string };
+  nextHeroTitle?: string;
 }) {
   return (
-    <nav
-      aria-label="Step navigation (bottom)"
-      className="flex items-center justify-between gap-3 border-t border-brand-navy/10 pt-6"
-    >
-      {prev ? (
-        <Link href={prev.href} className={buttonStyles("quiet", "md")}>
-          <span aria-hidden="true">←</span>
-          <span>{prev.label}</span>
+    <nav aria-label="Step navigation (bottom)" className="flex items-stretch gap-4">
+      {prev && (
+        <Link
+          href={prev.href}
+          className={buttonStyles("filled-orange", "md")}
+        >
+          <span aria-hidden="true" className="text-xl font-black">←</span>
+          Back
         </Link>
-      ) : (
-        <span />
       )}
-      {next ? (
-        <Link href={next.href} className={buttonStyles("primary", "md")}>
-          <span>{next.label}</span>
-          <span aria-hidden="true" className="arrow">→</span>
-        </Link>
-      ) : (
-        <span />
-      )}
+      {next && <UpNextCard href={next.href} part={3} title={nextHeroTitle ?? next.label} className="flex-1" />}
     </nav>
   );
 }

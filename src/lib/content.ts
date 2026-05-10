@@ -280,7 +280,7 @@ const setup: SetupContent = {
     {
       id: "bath-setup",
       eyebrow: "Section #1",
-      title: "Setting up your water bath",
+      title: "Fill and heat the chairside water bath — done once per practice",
       lead: "Done once per practice. The bath is reusable — only the steel cup is replaced for each patient.",
       wistiaMediaId: "etpwfysw59",
       wistiaTitle: "Setting up your water bath",
@@ -332,7 +332,7 @@ const setup: SetupContent = {
     {
       id: "material-prep",
       eyebrow: "Section #2",
-      title: "Making PerioPlast® mouldable",
+      title: "Soften PerioPlast® in hot water — fresh for every patient",
       lead: "Done fresh for each patient. The material fuses into a soft, pliable ball that you lift off the forceps in one piece.",
       wistiaMediaId: "obigdfc34w",
       wistiaTitle: "Making PerioPlast® mouldable",
@@ -348,12 +348,6 @@ const setup: SetupContent = {
         {
           index: "2.3",
           title: "Put on gloves. Apply Vaseline to prevent sticking.",
-          callouts: [
-            {
-              kind: "watch-out",
-              body: "Skipping the Vaseline is the #1 first-attempt failure — the disk tears as you pull it off the forceps.",
-            },
-          ],
         },
         {
           index: "2.4",
@@ -407,16 +401,16 @@ const setup: SetupContent = {
       "Three components, three different cleaning protocols. Use a clean cup for every patient.",
     items: [
       {
-        term: "Steel cup",
+        term: "Autoclave the cup between patients.",
         definition: "Autoclavable at 273 °F / 134 °C. Use a fresh cup per patient.",
       },
       {
-        term: "Water bath",
+        term: "Wipe the bath daily — never autoclave.",
         definition:
           "Not autoclavable. Wipe with sterilisation wipes daily. See bath manual for the full steam-sterilisation protocol.",
       },
       {
-        term: "Cup holder",
+        term: "Wipe the holder after every session.",
         definition: "Wipe with sterilisation wipes daily.",
       },
     ],

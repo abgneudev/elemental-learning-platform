@@ -9,7 +9,7 @@ import type { ComponentPropsWithoutRef, ReactNode } from "react";
  * pill. `filled` remains for hard CTAs (forms) where a button shape is needed:
  * navy fill, white text, 4px radius, no shadow.
  */
-export type ButtonVariant = "primary" | "filled" | "quiet" | "ghost";
+export type ButtonVariant = "primary" | "filled" | "quiet" | "ghost" | "outline-light" | "filled-orange";
 export type ButtonSize = "sm" | "md" | "lg";
 
 const base =
@@ -28,6 +28,12 @@ const variants: Record<ButtonVariant, string> = {
   // Ghost — bare text link, no underline (used for nav)
   ghost:
     "text-ink-700 hover:text-ink-900 focus-visible:outline-ink-900",
+  // Outline pill for use on dark/blue backgrounds — matches landing page CTAs
+  "outline-light":
+    "justify-center rounded-full border-2 border-white/70 bg-transparent text-white hover:border-white hover:bg-white/10 focus-visible:outline-white",
+  // Filled orange block — used for Back navigation
+  "filled-orange":
+    "justify-center rounded-md bg-brand-orange text-brand-navy font-bold hover:bg-brand-orange-matte focus-visible:outline-brand-orange",
 };
 
 const sizes: Record<ButtonSize, string> = {
@@ -48,6 +54,19 @@ const quietSizes: Record<ButtonSize, string> = {
   lg: "h-12 min-w-[3rem] px-5 text-lg",
 };
 
+const outlineLightSizes: Record<ButtonSize, string> = {
+  sm: "gap-3 px-5 py-3 text-sm font-semibold",
+  md: "gap-3 px-6 py-3.5 text-base font-semibold",
+  lg: "gap-3 px-8 py-4 text-lede font-semibold",
+};
+
+// Padding-based (no fixed height) so items-stretch can drive height
+const filledOrangeSizes: Record<ButtonSize, string> = {
+  sm: "px-4 py-2 text-sm",
+  md: "px-6 py-3 text-base",
+  lg: "px-9 py-4 text-base",
+};
+
 export function buttonStyles(
   variant: ButtonVariant = "primary",
   size: ButtonSize = "md",
@@ -57,9 +76,13 @@ export function buttonStyles(
   const sizeClass =
     variant === "filled"
       ? filledSizes[size]
+      : variant === "filled-orange"
+        ? filledOrangeSizes[size]
       : variant === "quiet"
         ? quietSizes[size]
-        : sizes[size];
+        : variant === "outline-light"
+          ? outlineLightSizes[size]
+          : sizes[size];
   return clsx(base, variants[variant], sizeClass, className);
 }
 

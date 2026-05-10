@@ -6,6 +6,7 @@ import {
   Container,
   Eyebrow,
   WistiaPlayer,
+  buttonStyles,
 } from "@/components/primitives";
 import { landing } from "@/lib/content";
 import { ExpandableCards } from "@/components/landing/expandable-cards";
@@ -77,7 +78,7 @@ function Hero() {
             {/* Play CTA */}
             <Link
               href={hero.primaryCta.href}
-              className="inline-flex items-center gap-3 rounded-full border-2 border-white/70 px-5 py-3 font-heading text-sm font-semibold text-white transition-colors hover:border-white hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className={buttonStyles("outline-light", "sm")}
             >
               <span className="flex h-7 w-7 flex-none items-center justify-center rounded-full bg-white">
                 <svg aria-hidden="true" className="h-2.5 w-2.5 translate-x-px fill-brand-blue" viewBox="0 0 10 12">
@@ -315,7 +316,7 @@ function ClinicalEvidence() {
             <div>
               <Link
                 href={evidence.href}
-                className="inline-flex items-center gap-3 rounded-full border-2 border-white/70 px-5 py-3 font-heading text-sm font-semibold text-white transition-colors hover:border-white hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                className={buttonStyles("outline-light", "sm")}
               >
                 Read the study
                 <svg aria-hidden="true" className="h-3.5 w-3.5 flex-none" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -493,7 +494,7 @@ function Pricing() {
             href={cta.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex self-start items-center gap-3 rounded-full border-2 border-white/70 px-5 py-3 font-heading text-sm font-semibold text-white transition-colors hover:border-white hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            className={buttonStyles("outline-light", "sm") + " self-start"}
           >
             {cta.label}
             <svg aria-hidden="true" className="h-3.5 w-3.5 flex-none" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -550,7 +551,7 @@ function Pricing() {
                 href={starterKit.cta.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 rounded-full border-2 border-white/70 px-5 py-3 font-heading text-sm font-semibold text-white transition-colors hover:border-white hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                className={buttonStyles("outline-light", "sm")}
               >
                 {starterKit.cta.label}
                 <svg aria-hidden="true" className="h-3.5 w-3.5 flex-none" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">

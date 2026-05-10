@@ -1,25 +1,25 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { clsx } from "clsx";
 import {
   Container,
   StepBar,
+  VideoDialog,
   WistiaPlayer,
   buttonStyles,
 } from "@/components/primitives";
 import {
   ExtraInfoCard,
   PageTimeline,
-  PeerQuote,
   QuickCheck,
   StepHero,
   StepSummary,
+  TabbedPhase,
+  UpNextCard,
+  type TabbedPhaseStep,
 } from "@/components/walkthrough";
 import { walkthrough } from "@/lib/content";
-import {
-  renderQuote,
-  renderCallouts,
-} from "@/components/walkthrough/render";
+import { renderDarkCallouts } from "@/components/walkthrough/render";
 
 const setup = walkthrough.setup;
 
@@ -83,22 +83,37 @@ export default function SetupPage() {
         </section>
 
         {/* ── What's in the Starter Kit ────────────────────────────────── */}
-        <section className="border-b border-brand-navy/8 bg-cream">
+        <section className="border-b border-white/10 bg-brand-navy">
           <Container size="xl" className="py-20 sm:py-28">
-            <DetailSection
-              section={setup.details.find((d) => d.id === "starter-kit")!}
-              index={0}
-              showLetter={false}
-            />
+            <div className="flex flex-col gap-10">
+              <p className="font-heading text-lg font-bold text-white sm:text-xl">
+                 Starter Kit includes all the essentials to get you started with PerioPlast®:
+              </p>
+              <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
+                {[
+                  "2 boxes of PerioPlast®",
+                  "Chairside Water Bath",
+                  "Free sample to practice",
+                  "Training Materials",
+                ].map((label) => (
+                  <div key={label} className="flex flex-1 flex-col gap-3">
+                    <div className="aspect-[4/3] w-full rounded-xl bg-white/10" />
+                    <p className="font-heading text-base font-bold leading-tight tracking-tight text-white">
+                      {label}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </Container>
         </section>
 
         {/* ── Step A: Bath Setup ────────────────────────────────────────── */}
         <section id="bath-setup" className="border-b border-brand-navy/8 bg-cream">
           <Container size="xl" className="py-20 sm:py-28">
-            <DetailSection
+            <SetupTabbedSection
               section={setup.details.find((d) => d.id === "bath-setup")!}
-              index={0}
+              phaseNumber={1}
             />
           </Container>
         </section>
@@ -106,35 +121,38 @@ export default function SetupPage() {
         {/* ── Step B: Material Prep ─────────────────────────────────────── */}
         <section id="material-prep" className="border-b border-brand-navy/8 bg-cream">
           <Container size="xl" className="py-20 sm:py-28">
-            <DetailSection
+            <SetupTabbedSection
               section={setup.details.find((d) => d.id === "material-prep")!}
-              index={1}
+              phaseNumber={2}
             />
           </Container>
         </section>
 
-        {/* ── Peer quote (dark navy) ────────────────────────────────────── */}
-        <section className="border-b border-white/10 bg-brand-navy">
-          <Container size="xl" className="py-20 sm:py-24">
-            <PeerQuote
-              tone="dark"
-              quote={renderQuote(setup.peerQuote.quote)}
-              author={setup.peerQuote.author}
-            />
-          </Container>
-        </section>
-
-        {/* ── Extra info + step nav (cream) ─────────────────────────────── */}
-        <section className="bg-cream">
-          <Container size="xl" className="flex flex-col gap-10 py-20 sm:py-24">
+        {/* ── Extra info + step nav (brand-blue) ───────────────────────── */}
+        <section className="bg-brand-blue">
+          <Container size="xl" className="flex flex-col gap-16 py-24 sm:py-32">
             <ExtraInfoCard
               label={setup.extraInfo.label}
               title={setup.extraInfo.title}
               description={setup.extraInfo.description}
-              items={setup.extraInfo.items}
+              items={setup.extraInfo.items?.map((item, i) => ({
+                ...item,
+                image: (
+                  <Image
+                    src={`/images/Pat${i + 1}.png`}
+                    alt={typeof item.term === "string" ? item.term : ""}
+                    fill
+                    className="object-contain"
+                  />
+                ),
+              }))}
               cta={setup.extraInfo.cta}
             />
-            <BottomNav prev={setup.nav.prev} next={setup.nav.next} />
+            <BottomNav
+              prev={setup.nav.prev}
+              next={setup.nav.next}
+              nextHeroTitle={walkthrough.form.hero.title}
+            />
           </Container>
         </section>
       </main>
@@ -142,128 +160,78 @@ export default function SetupPage() {
   );
 }
 
-function DetailSection({ section, index, showLetter = true }: { section: typeof setup.details[number]; index: number; showLetter?: boolean }) {
-  return (
-    <section
-      aria-labelledby={`${section.id}-title`}
-    >
-      <header className="flex flex-col gap-3">
-        <div className="flex items-center gap-3">
-          {showLetter && (
-            <span
-              aria-hidden="true"
-              className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-brand-red font-heading text-xl font-bold text-white"
-            >
-              {String.fromCharCode(65 + index)}
-            </span>
-          )}
-          <h2
-            id={`${section.id}-title`}
-            className="font-heading text-2xl font-semibold leading-tight text-brand-navy sm:text-3xl"
-          >
-            {section.title}
-          </h2>
-        </div>
-        {section.lead && (
-          <p className="max-w-prose text-base leading-snug text-brand-navy/75">
-            {section.lead}
-          </p>
-        )}
-      </header>
-
+function SetupTabbedSection({
+  section,
+  phaseNumber,
+}: {
+  section: typeof setup.details[number];
+  phaseNumber: number;
+}) {
+  const description = (
+    <>
+      {section.lead}
       {section.wistiaMediaId && (
-        <div className="mt-6">
-          <WistiaPlayer
+        <div className="mt-3">
+          <VideoDialog
             mediaId={section.wistiaMediaId}
             title={section.wistiaTitle ?? section.title}
+            buttonLabel="Watch section overview"
           />
         </div>
       )}
+    </>
+  );
 
-      {section.microSteps && section.microSteps.length > 0 && (
-        <div className="relative mt-8">
-          <span
-            aria-hidden="true"
-            className="absolute inset-0 translate-x-2 translate-y-2 rounded-md bg-[#222525]/15"
-          />
-          <ol className="relative flex flex-col divide-y divide-brand-navy/10 rounded-md border border-brand-navy/15 bg-white p-6 sm:p-9">
-          {section.microSteps.map((step, idx) => (
-            <li
-              key={step.index}
-              className={clsx(
-                "grid grid-cols-[auto_1fr] items-start gap-x-4 gap-y-2 sm:gap-x-6",
-                idx === 0 ? "pb-5 sm:pb-6" : idx === section.microSteps!.length - 1 ? "pt-5 sm:pt-6" : "py-5 sm:py-6",
-              )}
-            >
-              <span
-                aria-hidden="true"
-                className="mt-0.5 inline-flex flex-none items-baseline font-mono text-xs font-semibold tracking-eyebrow text-brand-blue"
-              >
-                / {step.index}
-              </span>
-              <p className="font-heading text-base font-medium leading-snug text-brand-navy sm:text-lg">
-                {step.title}
-              </p>
-              {step.bullets && step.bullets.length > 0 && (
-                <ul className="col-start-2 flex list-disc flex-col gap-1 pl-4 text-sm leading-snug text-brand-navy/80 marker:text-brand-navy/35">
-                  {step.bullets.map((b, j) => (
-                    <li key={j}>{b}</li>
-                  ))}
-                </ul>
-              )}
-              {step.callouts && step.callouts.length > 0 && (
-                <div className="col-start-2 mt-1 flex flex-col gap-3">
-                  {renderCallouts(step.callouts)}
-                </div>
-              )}
-            </li>
-          ))}
-          </ol>
-        </div>
-      )}
+  const steps: TabbedPhaseStep[] =
+    section.microSteps?.map((step) => ({
+      title: step.title,
+      bullets: step.bullets,
+      callouts:
+        step.callouts && step.callouts.length > 0
+          ? renderDarkCallouts(step.callouts)
+          : undefined,
+      imageLabel: typeof step.title === "string" ? step.title : undefined,
+    })) ?? [];
 
+  return (
+    <TabbedPhase
+      phaseNumber={phaseNumber}
+      title={section.title}
+      description={description}
+      steps={steps}
+    >
       {section.quickCheck && (
-        <div className="mt-6">
-          <QuickCheck
-            label={section.quickCheck.label}
-            title={section.quickCheck.title}
-            items={section.quickCheck.items}
-          />
-        </div>
+        <QuickCheck
+          label={section.quickCheck.label}
+          title={section.quickCheck.title}
+          items={section.quickCheck.items}
+        />
       )}
-    </section>
+    </TabbedPhase>
   );
 }
 
 function BottomNav({
   prev,
   next,
+  nextHeroTitle,
 }: {
   prev?: { href: string; label: string };
   next?: { href: string; label: string };
+  nextHeroTitle?: string;
 }) {
   return (
-    <nav
-      aria-label="Step navigation (bottom)"
-      className="flex items-center justify-between gap-3 border-t border-brand-navy/10 pt-6"
-    >
-      {prev ? (
-        <Link href={prev.href} className={buttonStyles("quiet", "md")}>
-          <span aria-hidden="true">←</span>
-          <span>{prev.label}</span>
+    <nav aria-label="Step navigation (bottom)" className="flex items-stretch gap-4">
+      {prev && (
+        <Link
+          href={prev.href}
+          className={buttonStyles("filled-orange", "md")}
+        >
+          <span aria-hidden="true" className="text-xl font-black">←</span>
+          Back
         </Link>
-      ) : (
-        <span />
       )}
-      {next ? (
-        <Link href={next.href} className={buttonStyles("primary", "md")}>
-          <span>{next.label}</span>
-          <span aria-hidden="true" className="arrow">→</span>
-        </Link>
-      ) : (
-        <span />
-      )}
+      {next && <UpNextCard href={next.href} part={2} title={nextHeroTitle ?? next.label} className="flex-1" />}
     </nav>
   );
 }
-

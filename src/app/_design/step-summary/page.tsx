@@ -35,7 +35,7 @@ export default function StepSummaryPreview() {
             totalTime="~5 min"
             items={[
               {
-                text: "Place cup holder, fill bath and cup with hot tap water.",
+                text: "Place cup holder, fill bath and cup with tap water.",
                 href: "#bath-setup",
                 time: "~30 sec",
               },

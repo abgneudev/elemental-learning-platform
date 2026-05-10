@@ -13,15 +13,12 @@ export type StepSummaryItem = {
 };
 
 type StepSummaryProps = {
-  /** Eyebrow override. */
   label?: string;
-  /** Headline. */
   title?: ReactNode;
   items: StepSummaryItem[];
-  /** Optional total-time mono caption rendered next to the title. */
   totalTime?: string;
-  /** Optional one-line context under the title. */
   description?: ReactNode;
+  tone?: "light" | "dark";
   className?: string;
 };
 
@@ -35,43 +32,28 @@ export function StepSummary({
   label = "Steps at a glance",
   title = "Steps at a glance",
   items,
-  totalTime,
-  description,
+  tone = "light",
   className,
 }: StepSummaryProps) {
+  const isDark = tone === "dark";
   return (
     <section
       aria-label={typeof title === "string" ? title : label}
-      className={clsx("flex flex-col gap-5", className)}
+      className={clsx("flex flex-col gap-4", className)}
     >
-      <Eyebrow tone="blue" size="md" withRule>
+      <Eyebrow tone={isDark ? "cream" : "blue"} size="md">
         {label}
       </Eyebrow>
-      <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h2 className="font-heading text-2xl font-bold tracking-tight text-brand-navy sm:text-3xl">
-          {title}
-        </h2>
-        {totalTime && (
-          <span className="font-mono text-xs uppercase tracking-eyebrow text-brand-blue">
-            {totalTime}
-          </span>
-        )}
-      </div>
-      {description && (
-        <p className="max-w-measure text-base leading-relaxed text-brand-navy/70">
-          {description}
-        </p>
-      )}
-      <ol className="mt-2 flex flex-col">
+      <ol className="flex flex-col">
         {items.map((item, i) => {
           const inner = (
             <>
-              <SlashNumber n={i + 1} tone="blue" className="pt-1" />
-              <span className="font-heading text-lg font-semibold leading-snug text-brand-navy sm:text-xl">
+              <SlashNumber n={i + 1} tone={isDark ? "cream" : "blue"} className="pt-1" />
+              <span className={clsx("text-xs font-normal leading-snug sm:text-sm", isDark ? "text-white" : "text-brand-navy")}>
                 {item.text}
               </span>
               {item.time && (
-                <span className="self-start pt-1.5 text-right font-mono text-xs uppercase tracking-eyebrow text-brand-blue">
+                <span className={clsx("self-start pt-1.5 text-right font-mono text-xs uppercase tracking-eyebrow", isDark ? "text-white/60" : "text-brand-blue")}>
                   {item.time}
                 </span>
               )}
@@ -79,10 +61,11 @@ export function StepSummary({
           );
 
           const rowClass = clsx(
-            "grid grid-cols-[3rem_1fr_auto] items-baseline gap-x-5 gap-y-1 border-t border-hairline py-5",
+            "grid grid-cols-[3rem_1fr_auto] items-baseline gap-x-5 gap-y-1 border-t py-5",
+            isDark ? "border-white/15" : "border-hairline",
             i === items.length - 1 && "border-b",
             item.href &&
-              "transition-colors duration-200 hover:bg-brand-blue/5",
+              "transition-colors duration-200 hover:bg-white/5",
           );
 
           return (
@@ -92,7 +75,7 @@ export function StepSummary({
                   href={item.href}
                   className={clsx(
                     rowClass,
-                    "outline-none focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-offset-2",
+                    "outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2",
                   )}
                 >
                   {inner}

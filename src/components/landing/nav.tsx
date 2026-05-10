@@ -6,8 +6,8 @@ import { clsx } from "clsx";
 import { Container } from "@/components/primitives";
 
 const NAV_STEPS = [
-  { num: "1.", label: "Prep",  href: "/walkthrough/setup" },
-  { num: "2.", label: "Form",  href: "/walkthrough/form"  },
+  { num: "1.", label: "Heat",  href: "/walkthrough/setup" },
+  { num: "2.", label: "Mould",  href: "/walkthrough/form"  },
   { num: "3.", label: "Apply", href: "/walkthrough/apply" },
 ] as const;
 

@@ -41,7 +41,7 @@ export function ExpandableCards({ cards }: ExpandableCardsProps) {
               // md+: horizontal accordion — the focused/hovered card expands.
               "border border-brand-navy/20 bg-brand-navy",
               isActive
-                ? "md:flex-[4_1_0%] md:border-brand-navy-deep/20 md:bg-brand-navy-deep"
+                ? "md:flex-[4_1_0%] md:border-brand-navy/20 md:bg-brand-navy"
                 : "md:flex-[1_1_0%] md:cursor-pointer md:border-white/15 md:bg-white/15",
               "focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-brand-blue",
             )}

@@ -116,7 +116,7 @@ These categories were extracted from the now-rejected onboarding-quiz research. 
 
 **Walkthrough — content patterns (named, reusable)**
 - `QuickCheck` — two-up confirmation card showing what success looks like (image + caption). Appears at phase boundaries inside the Form step and at the end of Setup and Apply. Confirmed pattern from live site pages 2 and 3.
-- `ProTip` — inline tip next to a specific step, helpful guidance (e.g., "Hot tap water saves heating time"). Light visual treatment.
+- `ProTip` — inline tip next to a specific step, helpful guidance (e.g., "tap water saves heating time"). Light visual treatment.
 - `WatchOut` — inline warning next to a specific step, critical to avoid error (e.g., "Apply Vaseline on gloves to prevent sticking"). Stronger visual treatment with the orange accent.
 - `SampleCallout` — physical-sample affordance with blister-pack icon and prompt copy ("Use the free sample to make your 1st stent"). Renders at the top of the Form step. Couples digital walkthrough to the physical Starter Kit.
 - `GreatStentReference` — 4-criteria reference card. The four criteria from the live site: bite function, tight palatal adaptation, stable retention, thin (~2 mm). Each criterion has a reference photo and a one-line caption. Renders inside the Form step after the procedural phases.

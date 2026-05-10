@@ -33,7 +33,7 @@ export default function PeerQuotePreview() {
             quote={
               <p>
                 Half my chair-time issue was waiting for the bath. Filling it
-                with hot tap water cut the wait to under two minutes.
+                with tap water cut the wait to under two minutes.
               </p>
             }
           />

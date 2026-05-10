@@ -10,6 +10,7 @@
   --color-brand-mint: #d6eedb;
   --color-brand-orange: #fc9f5b;
   --color-cream: #f8f6f4;
+  --color-brand-grey: #222525;
 
   /* Walkthrough bookend backgrounds */
   --bg-step-setup: var(--color-brand-cyan);

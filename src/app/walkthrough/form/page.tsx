@@ -19,7 +19,6 @@ import {
   StepSummary,
   ToFinishCard,
   WhatToLookOutFor,
-  WhatYouWillLearn,
   type GreatStentCriterion,
   type PhaseMicroStep,
   type QuickCheckItem,
@@ -208,142 +207,162 @@ export default function FormPage() {
         }}
       />
 
-      <main className="bg-white text-[#03045e]">
-        <Container size="xl" className="flex flex-col gap-16 py-16 sm:gap-20 sm:py-24">
-          <StepHero
-            step="form"
-            eyebrow={form.hero.eyebrow}
-            title={form.hero.title}
-            lead={form.hero.lead}
-            time={form.hero.time}
-            illustration={
-              <WistiaPlayer
-                mediaId={videos.pageHero.form.mediaId}
-                title={videos.pageHero.form.title}
-                aspect="4x3"
-              />
-            }
-          />
-
-          <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-12">
-            <div className="flex flex-1 min-w-0 flex-col">
-              <WhatYouWillLearn items={form.whatYouWillLearn} />
-            </div>
-            <div className="flex flex-1 min-w-0 flex-col">
-              <StepSummary
-                label={form.summary.label}
-                title={form.summary.title}
-                description={form.summary.description}
-                totalTime={form.summary.totalTime}
-                items={form.summary.items}
-              />
-            </div>
-          </div>
-
-          <SampleCallout
-            title={form.sampleCallout.title}
-            cta={form.sampleCallout.cta}
-            image={
-              <Image
-                src={icons.blister}
-                alt="PerioPlast practice sheet — blister pack."
-                width={160}
-                height={160}
-                className="h-full w-full object-contain p-4"
-                unoptimized
-              />
-            }
-          >
-            {form.sampleCallout.body}
-          </SampleCallout>
-
-          <div id="phases" className="flex scroll-mt-24 flex-col gap-4 sm:gap-6">
-            {form.phases.map((phase) => {
-              const heroVideo = phaseHeroVideo(phase.phaseNumber);
-              const decoratedQuickCheck = phase.quickCheck
-                ? {
-                    ...phase.quickCheck,
-                    items: decorateQuickCheck(
-                      phase.phaseNumber,
-                      phase.quickCheck.items,
-                    ),
-                  }
-                : undefined;
-
-              return (
-                <PhaseSection
-                  key={phase.phaseNumber}
-                  phaseNumber={phase.phaseNumber}
-                  title={phase.title}
-                  time={phase.time}
-                  description={
-                    <>
-                      {phase.description}
-                      {heroVideo && (
-                        <div className="mt-6">
-                          <WistiaPlayer
-                            mediaId={heroVideo.mediaId}
-                            title={heroVideo.title}
-                            aspect="16x9"
-                          />
-                        </div>
-                      )}
-                    </>
-                  }
-                  microSteps={phase.microSteps.map((step, i) =>
-                    toPhaseMicroStep(step, microStepVideos[phase.phaseNumber]?.[i])
-                  )}
-                  beforeCheck={
-                    phase.toFinish ? (
-                      <ToFinishCard
-                        title={phase.toFinish.title}
-                        duration={phase.toFinish.duration}
-                      >
-                        {phase.toFinish.body}
-                      </ToFinishCard>
-                    ) : undefined
-                  }
-                >
-                  {decoratedQuickCheck && (
-                    <QuickCheck
-                      title={decoratedQuickCheck.title}
-                      items={decoratedQuickCheck.items}
+      <main className="text-brand-navy">
+        {/* ── Hero band (azure tint — step colour for Form step) ───────── */}
+        <section className="border-b border-brand-navy/8 bg-azure">
+          <Container size="xl" className="pb-20 pt-28 sm:pb-40 sm:pt-40">
+            <div className="flex flex-col gap-10">
+              <StepHero description={`Part 2: ${form.hero.lead}`} />
+              <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-16">
+                <div className="flex min-w-0 flex-1 flex-col">
+                  <StepSummary
+                    label={form.summary.label}
+                    title={form.summary.title}
+                    totalTime={form.summary.totalTime}
+                    items={form.summary.items}
+                  />
+                </div>
+                <div className="flex min-w-0 flex-1 flex-col">
+                  <div className="overflow-hidden rounded-2xl border-6 border-brand-navy shadow-xl">
+                    <WistiaPlayer
+                      mediaId={videos.pageHero.form.mediaId}
+                      title={videos.pageHero.form.title}
                     />
-                  )}
-                </PhaseSection>
-              );
-            })}
-          </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Container>
+        </section>
 
-          <GreatStentReference
-            title={form.greatStentReference.title}
-            description={form.greatStentReference.description}
-            items={greatStentItems}
-          />
+        {/* ── Sample callout (cream) ────────────────────────────────────── */}
+        <section className="border-b border-brand-navy/8 bg-cream">
+          <Container size="xl" className="flex flex-col gap-12 py-16 sm:gap-14 sm:py-20">
+            <SampleCallout
+              title={form.sampleCallout.title}
+              cta={form.sampleCallout.cta}
+              image={
+                <Image
+                  src={icons.blister}
+                  alt="PerioPlast practice sheet — blister pack."
+                  width={160}
+                  height={160}
+                  className="h-full w-full object-contain p-4"
+                  unoptimized
+                />
+              }
+            >
+              {form.sampleCallout.body}
+            </SampleCallout>
+          </Container>
+        </section>
 
-          <div id="what-to-look-out-for" className="scroll-mt-24">
-            <WhatToLookOutFor
-              title={form.whatToLookOutFor.title}
-              description={form.whatToLookOutFor.description}
-              items={lookoutItems}
+        {/* ── Phase sections (cream) ────────────────────────────────────── */}
+        <section className="border-b border-brand-navy/8 bg-cream">
+          <Container size="xl" className="py-20 sm:py-24">
+            <div id="phases" className="flex scroll-mt-24 flex-col gap-4 sm:gap-6">
+              {form.phases.map((phase) => {
+                const heroVideo = phaseHeroVideo(phase.phaseNumber);
+                const decoratedQuickCheck = phase.quickCheck
+                  ? {
+                      ...phase.quickCheck,
+                      items: decorateQuickCheck(
+                        phase.phaseNumber,
+                        phase.quickCheck.items,
+                      ),
+                    }
+                  : undefined;
+
+                return (
+                  <PhaseSection
+                    key={phase.phaseNumber}
+                    phaseNumber={phase.phaseNumber}
+                    title={phase.title}
+                    time={phase.time}
+                    description={
+                      <>
+                        {phase.description}
+                        {heroVideo && (
+                          <div className="mt-6">
+                            <WistiaPlayer
+                              mediaId={heroVideo.mediaId}
+                              title={heroVideo.title}
+                              aspect="16x9"
+                            />
+                          </div>
+                        )}
+                      </>
+                    }
+                    microSteps={phase.microSteps.map((step, i) =>
+                      toPhaseMicroStep(step, microStepVideos[phase.phaseNumber]?.[i])
+                    )}
+                    beforeCheck={
+                      phase.toFinish ? (
+                        <ToFinishCard
+                          title={phase.toFinish.title}
+                          duration={phase.toFinish.duration}
+                        >
+                          {phase.toFinish.body}
+                        </ToFinishCard>
+                      ) : undefined
+                    }
+                  >
+                    {decoratedQuickCheck && (
+                      <QuickCheck
+                        title={decoratedQuickCheck.title}
+                        items={decoratedQuickCheck.items}
+                      />
+                    )}
+                  </PhaseSection>
+                );
+              })}
+            </div>
+          </Container>
+        </section>
+
+        {/* ── Great stent + look-out-for (azure tint) ──────────────────── */}
+        <section className="border-b border-brand-navy/8 bg-azure">
+          <Container size="xl" className="flex flex-col gap-20 py-20 sm:gap-24 sm:py-28">
+            <GreatStentReference
+              title={form.greatStentReference.title}
+              description={form.greatStentReference.description}
+              items={greatStentItems}
             />
-          </div>
 
-          <PeerQuote
-            quote={renderQuote(form.peerQuote.quote)}
-            author={form.peerQuote.author}
-          />
+            <div id="what-to-look-out-for" className="scroll-mt-24">
+              <WhatToLookOutFor
+                title={form.whatToLookOutFor.title}
+                description={form.whatToLookOutFor.description}
+                items={lookoutItems}
+              />
+            </div>
+          </Container>
+        </section>
 
-          <ExtraInfoCard
-            label={form.extraInfo.label}
-            title={form.extraInfo.title}
-            description={form.extraInfo.description}
-            items={form.extraInfo.items}
-            cta={form.extraInfo.cta}
-          />
+        {/* ── Peer quote (dark navy) ────────────────────────────────────── */}
+        <section className="border-b border-white/10 bg-brand-navy">
+          <Container size="xl" className="py-20 sm:py-24">
+            <PeerQuote
+              tone="dark"
+              quote={renderQuote(form.peerQuote.quote)}
+              author={form.peerQuote.author}
+            />
+          </Container>
+        </section>
 
-          <BottomNav prev={form.nav.prev} next={form.nav.next} />
-        </Container>
+        {/* ── Extra info + step nav (cream) ─────────────────────────────── */}
+        <section className="bg-cream">
+          <Container size="xl" className="flex flex-col gap-10 py-20 sm:py-24">
+            <ExtraInfoCard
+              label={form.extraInfo.label}
+              title={form.extraInfo.title}
+              description={form.extraInfo.description}
+              items={form.extraInfo.items}
+              cta={form.extraInfo.cta}
+            />
+            <BottomNav prev={form.nav.prev} next={form.nav.next} />
+          </Container>
+        </section>
       </main>
     </>
   );
@@ -383,7 +402,7 @@ function BottomNav({
   return (
     <nav
       aria-label="Step navigation (bottom)"
-      className="flex items-center justify-between gap-3 border-t border-[#222525]/10 pt-6"
+      className="flex items-center justify-between gap-3 border-t border-brand-navy/10 pt-6"
     >
       {prev ? (
         <Link href={prev.href} className={buttonStyles("quiet", "md")}>

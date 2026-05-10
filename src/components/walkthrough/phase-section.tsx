@@ -102,9 +102,9 @@ export function PhaseSection({
       {/* ── Expanded content ── */}
       <div className="flex flex-col gap-10 pb-12 sm:pb-16">
         {description && (
-          <p className="max-w-measure text-base leading-relaxed text-brand-navy/70">
+          <div className="max-w-measure text-base leading-relaxed text-brand-navy/70">
             {description}
-          </p>
+          </div>
         )}
 
         <ol className="flex flex-col gap-8 sm:grid sm:grid-cols-2 sm:gap-x-12 sm:gap-y-10">

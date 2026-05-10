@@ -14,7 +14,6 @@ import {
   QuickCheck,
   StepHero,
   StepSummary,
-  WhatYouWillLearn,
 } from "@/components/walkthrough";
 import { walkthrough } from "@/lib/content";
 import {
@@ -45,60 +44,71 @@ export default function SetupPage() {
         }}
       />
 
-      <main className="bg-[#f1fdff] text-brand-navy">
-        <Container size="xl" className="flex flex-col gap-12 py-12 sm:gap-16 sm:py-16">
-          <StepHero
-            step="setup"
-            eyebrow={setup.hero.eyebrow}
-            title={setup.hero.title}
-            lead={setup.hero.lead}
-            time={setup.hero.time}
-            illustration={
-              setup.hero.wistiaMediaId ? (
-                <WistiaPlayer
-                  mediaId={setup.hero.wistiaMediaId}
-                  title={setup.hero.wistiaTitle ?? setup.hero.title}
-                  aspect="4x3"
-                />
-              ) : undefined
-            }
-          />
-
-          <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-12">
-            <div className="flex flex-1 min-w-0 flex-col">
-              <WhatYouWillLearn items={setup.whatYouWillLearn} />
+      <main className="text-brand-navy">
+        {/* ── Hero band (azure tint — step colour) ─────────────────────── */}
+        <section className="border-b border-brand-navy/8 bg-azure">
+          <Container size="xl" className="pb-20 pt-28 sm:pb-40 sm:pt-40">
+            <div className="flex flex-col gap-10">
+              <StepHero description={`Part 1: ${setup.hero.lead}`} />
+              <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-16">
+                <div className="flex min-w-0 flex-1 flex-col">
+                  <StepSummary
+                    label={setup.summary.label}
+                    title={setup.summary.title}
+                    totalTime={setup.summary.totalTime}
+                    items={setup.summary.items}
+                  />
+                </div>
+                <div className="flex min-w-0 flex-1 flex-col">
+                  {setup.hero.wistiaMediaId && (
+                    <div className="overflow-hidden rounded-2xl border-6 border-brand-navy shadow-xl">
+                      <WistiaPlayer
+                        mediaId={setup.hero.wistiaMediaId}
+                        title={setup.hero.wistiaTitle ?? setup.hero.title}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
-            <div className="flex flex-1 min-w-0 flex-col">
-              <StepSummary
-                label={setup.summary.label}
-                title={setup.summary.title}
-                description={setup.summary.description}
-                totalTime={setup.summary.totalTime}
-                items={setup.summary.items}
-              />
-            </div>
-          </div>
+          </Container>
+        </section>
 
-          <div className="flex flex-col gap-12 sm:gap-16">
+        {/* ── Detail sections (cream) ───────────────────────────────────── */}
+        <section className="border-b border-brand-navy/8 bg-cream">
+          <Container size="xl" className="flex flex-col gap-16 py-20 sm:gap-20 sm:py-28">
             {(["bath-setup", "material-prep", "starter-kit"] as const)
               .map((id) => setup.details.find((d) => d.id === id)!)
               .map((section) => (
                 <DetailSection key={section.id} section={section} />
               ))}
-          </div>
+          </Container>
+        </section>
 
-          <PeerQuote quote={renderQuote(setup.peerQuote.quote)} author={setup.peerQuote.author} />
+        {/* ── Peer quote (dark navy) ────────────────────────────────────── */}
+        <section className="border-b border-white/10 bg-brand-navy">
+          <Container size="xl" className="py-20 sm:py-24">
+            <PeerQuote
+              tone="dark"
+              quote={renderQuote(setup.peerQuote.quote)}
+              author={setup.peerQuote.author}
+            />
+          </Container>
+        </section>
 
-          <ExtraInfoCard
-            label={setup.extraInfo.label}
-            title={setup.extraInfo.title}
-            description={setup.extraInfo.description}
-            items={setup.extraInfo.items}
-            cta={setup.extraInfo.cta}
-          />
-
-          <BottomNav prev={setup.nav.prev} next={setup.nav.next} />
-        </Container>
+        {/* ── Extra info + step nav (cream) ─────────────────────────────── */}
+        <section className="bg-cream">
+          <Container size="xl" className="flex flex-col gap-10 py-20 sm:py-24">
+            <ExtraInfoCard
+              label={setup.extraInfo.label}
+              title={setup.extraInfo.title}
+              description={setup.extraInfo.description}
+              items={setup.extraInfo.items}
+              cta={setup.extraInfo.cta}
+            />
+            <BottomNav prev={setup.nav.prev} next={setup.nav.next} />
+          </Container>
+        </section>
       </main>
     </>
   );

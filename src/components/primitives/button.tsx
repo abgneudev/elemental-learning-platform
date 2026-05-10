@@ -24,7 +24,7 @@ const variants: Record<ButtonVariant, string> = {
     "justify-center rounded-sm bg-ink-900 text-cream font-semibold hover:bg-ink-800 focus-visible:outline-ink-900",
   // Outlined ink — used by step-bar arrow nav and similar
   quiet:
-    "justify-center rounded-full border border-hairline-strong bg-cream text-ink-900 hover:border-ink-900 hover:bg-ink-50 focus-visible:outline-ink-900",
+    "justify-center rounded-full border-2 border-ink-900 bg-transparent text-ink-900 focus-visible:outline-ink-900",
   // Ghost — bare text link, no underline (used for nav)
   ghost:
     "text-ink-700 hover:text-ink-900 focus-visible:outline-ink-900",

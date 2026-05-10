@@ -29,7 +29,7 @@ export default function ProTipPreview() {
         >
           <Step n="1.2" instruction="Fill the bath with water to the line on the cup holder." />
           <ProTip className="mt-3">
-            Fill the bath with hot tap water to speed up the heating time.
+            Fill the bath with tap water to speed up the heating time.
           </ProTip>
         </Variant>
 

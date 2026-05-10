@@ -236,8 +236,8 @@ Hero video: Wistia `etpwfysw59`
 | # | Instruction | Pro tip |
 |---|---|---|
 | 1.1 | Place the cup holder in the bath. | — |
-| 1.2 | Fill the bath with water to the line on the cup holder. | Fill the bath with hot tap water to speed up the heating time. |
-| 1.3 | Fill the cup with water to the line on the cup. | Fill the bath with hot tap water to speed up the heating time. |
+| 1.2 | Fill the bath with water to the line on the cup holder. | Fill the bath with tap water to speed up the heating time. |
+| 1.3 | Fill the cup with water to the line on the cup. | Fill the bath with tap water to speed up the heating time. |
 | 1.4 | Place the cup in the cup holder. | — |
 | 1.5 | Plug in & turn the bath on and set to **180°F or 80°C**. | — |
 | 1.6 | The bath will heat to 180°F / 80°C. This will take **approx. 5 min**. | — |
@@ -297,7 +297,7 @@ Hero video: Wistia `obigdfc34w`
 | "Heat to 65 °C" | **180 °F / 80 °C** |
 | "90 seconds in the bath" | **5 minutes** to reach steaming temperature; stirring is 10 seconds |
 | "Drop in a disk, watch for translucency" | Pour 1 sheet (4 cubes) into a cup of water inside the bath, stir with forceps, granules clump into chewing-gum consistency |
-| Generic "calibrate quarterly" peer tip | Real pro tip from the live site: "Fill the bath with hot tap water to speed up the heating time" |
+| Generic "calibrate quarterly" peer tip | Real pro tip from the live site: "Fill the bath with tap water to speed up the heating time" |
 | Implicit single-step heat | Two distinct sub-procedures: (1) bath setup — one-time, 6 steps; (2) making PerioPlast mouldable — per-patient, 8 steps |
 | No mention of Vaseline | Vaseline on gloves is a real step to prevent sticking |
 
@@ -315,7 +315,7 @@ Hero video: Wistia `obigdfc34w`
 
 8. **"Quick check" pattern.** The live site uses "Quick check" call-out boxes after each major section — small confirmation cards showing what success looks like. This is a strong didactic pattern worth preserving in the redesign. Add to component inventory.
 
-9. **"Pro tip" pattern.** Inline pro tips next to specific steps (e.g., hot tap water tip on step 1.2). Worth preserving as a reusable component slot per step.
+9. **"Pro tip" pattern.** Inline pro tips next to specific steps (e.g., tap water tip on step 1.2). Worth preserving as a reusable component slot per step.
 
 10. **Wistia video integration.** Every step image is a tappable video on the live site. Our redesign needs a decision: keep Wistia (already paid for, content already produced), embed natively, or migrate to a different host. Recommend keeping Wistia for v1 to minimize content-team disruption.
 

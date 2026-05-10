@@ -14,7 +14,6 @@ import {
   QuickCheck,
   StepHero,
   StepSummary,
-  WhatYouWillLearn,
 } from "@/components/walkthrough";
 import { walkthrough } from "@/lib/content";
 import {
@@ -43,58 +42,69 @@ export default function ApplyPage() {
         }}
       />
 
-      <main className="bg-[#f8f6f4] text-brand-navy">
-        <Container size="xl" className="flex flex-col gap-12 py-12 sm:gap-16 sm:py-16">
-          <StepHero
-            step="apply"
-            eyebrow={apply.hero.eyebrow}
-            title={apply.hero.title}
-            lead={apply.hero.lead}
-            time={apply.hero.time}
-            illustration={
-              apply.hero.wistiaMediaId ? (
-                <WistiaPlayer
-                  mediaId={apply.hero.wistiaMediaId}
-                  title={apply.hero.wistiaTitle ?? apply.hero.title}
-                  aspect="4x3"
-                />
-              ) : undefined
-            }
-          />
-
-          <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-12">
-            <div className="flex flex-1 min-w-0 flex-col">
-              <WhatYouWillLearn items={apply.whatYouWillLearn} />
+      <main className="text-brand-navy">
+        {/* ── Hero band (azure tint — step colour for Apply) ────────────── */}
+        <section className="border-b border-brand-navy/8 bg-azure">
+          <Container size="xl" className="pb-20 pt-28 sm:pb-40 sm:pt-40">
+            <div className="flex flex-col gap-10">
+              <StepHero description={`Part 3: ${apply.hero.lead}`} />
+              <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-16">
+                <div className="flex min-w-0 flex-1 flex-col">
+                  <StepSummary
+                    label={apply.summary.label}
+                    title={apply.summary.title}
+                    totalTime={apply.summary.totalTime}
+                    items={apply.summary.items}
+                  />
+                </div>
+                <div className="flex min-w-0 flex-1 flex-col">
+                  {apply.hero.wistiaMediaId && (
+                    <div className="overflow-hidden rounded-2xl border-6 border-brand-navy shadow-xl">
+                      <WistiaPlayer
+                        mediaId={apply.hero.wistiaMediaId}
+                        title={apply.hero.wistiaTitle ?? apply.hero.title}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
-            <div className="flex flex-1 min-w-0 flex-col">
-              <StepSummary
-                label={apply.summary.label}
-                title={apply.summary.title}
-                description={apply.summary.description}
-                totalTime={apply.summary.totalTime}
-                items={apply.summary.items}
-              />
-            </div>
-          </div>
+          </Container>
+        </section>
 
-          <div className="flex flex-col gap-12 sm:gap-16">
+        {/* ── Detail sections (cream) ───────────────────────────────────── */}
+        <section className="border-b border-brand-navy/8 bg-cream">
+          <Container size="xl" className="flex flex-col gap-16 py-20 sm:gap-20 sm:py-28">
             {apply.details.map((section) => (
               <DetailSection key={section.id} section={section} />
             ))}
-          </div>
+          </Container>
+        </section>
 
-          <PeerQuote quote={renderQuote(apply.peerQuote.quote)} author={apply.peerQuote.author} />
+        {/* ── Peer quote (dark navy) ────────────────────────────────────── */}
+        <section className="border-b border-white/10 bg-brand-navy">
+          <Container size="xl" className="py-20 sm:py-24">
+            <PeerQuote
+              tone="dark"
+              quote={renderQuote(apply.peerQuote.quote)}
+              author={apply.peerQuote.author}
+            />
+          </Container>
+        </section>
 
-          <ExtraInfoCard
-            label={apply.extraInfo.label}
-            title={apply.extraInfo.title}
-            description={apply.extraInfo.description}
-            items={apply.extraInfo.items}
-            cta={apply.extraInfo.cta}
-          />
-
-          <BottomNav prev={apply.nav.prev} next={apply.nav.next} />
-        </Container>
+        {/* ── Extra info + step nav (cream) ─────────────────────────────── */}
+        <section className="bg-cream">
+          <Container size="xl" className="flex flex-col gap-10 py-20 sm:py-24">
+            <ExtraInfoCard
+              label={apply.extraInfo.label}
+              title={apply.extraInfo.title}
+              description={apply.extraInfo.description}
+              items={apply.extraInfo.items}
+              cta={apply.extraInfo.cta}
+            />
+            <BottomNav prev={apply.nav.prev} next={apply.nav.next} />
+          </Container>
+        </section>
       </main>
     </>
   );
@@ -139,9 +149,9 @@ function DetailSection({ section }: { section: typeof apply.details[number] }) {
         <div className="relative mt-8">
           <span
             aria-hidden="true"
-            className="absolute inset-0 translate-x-2 translate-y-2 rounded-md bg-[#03045e]/15"
+            className="absolute inset-0 translate-x-2 translate-y-2 rounded-md bg-brand-navy/15"
           />
-          <ol className="relative flex flex-col divide-y divide-[#222525]/10 rounded-md border border-[#222525]/15 bg-white p-6 sm:p-9">
+          <ol className="relative flex flex-col divide-y divide-brand-navy/10 rounded-md border border-brand-navy/15 bg-white p-6 sm:p-9">
             {section.microSteps.map((step, idx) => (
               <li
                 key={step.index}
@@ -204,7 +214,7 @@ function BottomNav({
   return (
     <nav
       aria-label="Step navigation (bottom)"
-      className="flex items-center justify-between gap-3 border-t border-[#222525]/10 pt-6"
+      className="flex items-center justify-between gap-3 border-t border-brand-navy/10 pt-6"
     >
       {prev ? (
         <Link href={prev.href} className={buttonStyles("quiet", "md")}>

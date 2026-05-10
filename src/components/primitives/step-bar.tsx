@@ -1,7 +1,9 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { clsx } from "clsx";
 import { Container } from "./container";
-import { buttonStyles } from "./button";
 
 export type StepKey = "setup" | "form" | "apply";
 
@@ -23,8 +25,15 @@ const STEP_NUMBER: Record<StepKey, string> = {
    All blue family for a monochromatic finish (no mint / green). */
 const STEP_BG: Record<StepKey, string> = {
   setup: "bg-[#f1fdff]/90 supports-[backdrop-filter]:bg-[#f1fdff]/75 border-[#03045e]/10",
-  form: "bg-white/90 supports-[backdrop-filter]:bg-white/75 border-[#222525]/10",
+  form:  "bg-[#f1fdff]/90 supports-[backdrop-filter]:bg-[#f1fdff]/75 border-[#03045e]/10",
   apply: "bg-[#f8f6f4]/90 supports-[backdrop-filter]:bg-[#f8f6f4]/75 border-[#222525]/10",
+};
+
+/* Steps whose hero section has a dark background — need white text when transparent */
+const STEP_DARK_HERO: Record<StepKey, boolean> = {
+  setup: false, // bg-azure = very light
+  form: false,  // bg-azure = very light
+  apply: false, // bg-azure = very light
 };
 
 type StepBarProps = {
@@ -56,32 +65,49 @@ export function StepBar({
   stepHrefs,
   className,
 }: StepBarProps) {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 80);
+    onScroll(); // sync on mount in case page is already scrolled
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   const currentIndex = STEP_ORDER.indexOf(currentStep);
   const totalSteps = STEP_ORDER.length;
+  const isDark = STEP_DARK_HERO[currentStep];
 
   return (
     <header
       aria-label="Walkthrough"
       className={clsx(
-        "sticky top-0 z-30 border-b backdrop-blur-sm transition-colors duration-300",
-        STEP_BG[currentStep],
+        "fixed top-0 left-0 right-0 z-30 border-b backdrop-blur-sm transition-colors duration-300",
+        scrolled ? STEP_BG[currentStep] : "border-transparent bg-transparent",
         className,
       )}
     >
       <Container
         size="xl"
-        className="flex h-14 items-center gap-3 sm:h-16 sm:gap-6"
+        className="flex h-14 items-center sm:h-16"
       >
-        <Link
-          href={logoHref}
-          className="font-heading text-base font-semibold lowercase tracking-tight text-brand-navy transition-colors duration-200 hover:text-brand-blue sm:text-lg"
-        >
-          {brand}
-        </Link>
+        <div className="flex flex-1 items-center">
+          <Link
+            href={logoHref}
+            className={clsx(
+              "font-heading text-base font-semibold lowercase tracking-tight transition-colors duration-200 sm:text-lg",
+              scrolled || !isDark
+                ? "text-brand-navy hover:text-brand-blue"
+                : "text-white hover:text-white/80",
+            )}
+          >
+            {brand}
+          </Link>
+        </div>
 
         <nav
           aria-label="Walkthrough progress"
-          className="flex flex-1 items-center justify-center"
+          className="flex items-center"
         >
           <ol className="flex items-center gap-3 sm:gap-5 text-sm">
             {STEP_ORDER.map((step, i) => {
@@ -91,8 +117,16 @@ export function StepBar({
               const labelClass = clsx(
                 "inline-flex items-baseline gap-1.5 transition-colors duration-200",
                 isCurrent
-                  ? "text-brand-navy font-semibold"
-                  : "text-brand-navy/40 font-normal hover:text-brand-blue",
+                  ? clsx(
+                      "font-semibold",
+                      scrolled || !isDark ? "text-brand-navy" : "text-white",
+                    )
+                  : clsx(
+                      "font-normal",
+                      scrolled || !isDark
+                        ? "text-brand-navy/40 hover:text-brand-blue"
+                        : "text-white/40 hover:text-white",
+                    ),
               );
 
               const content = (
@@ -132,7 +166,7 @@ export function StepBar({
                   {i < STEP_ORDER.length - 1 && (
                     <span
                       aria-hidden="true"
-                      className="text-ink-900/25"
+                      className={scrolled || !isDark ? "text-ink-900/25" : "text-white/25"}
                     >
                       ·
                     </span>
@@ -147,29 +181,46 @@ export function StepBar({
           Step {currentIndex + 1} of {totalSteps}: {STEP_LABEL[currentStep]}.
         </p>
 
-        <nav
-          aria-label="Step navigation"
-          className="flex items-center gap-2"
-        >
+        <div className="flex flex-1 items-center justify-end gap-2">
           {prevHref && (
             <Link
               href={prevHref}
               aria-label={prevLabel}
-              className={buttonStyles("quiet", "sm")}
+              className={clsx(
+                "inline-flex items-center justify-center gap-2 font-heading transition-colors duration-200",
+                "outline-none focus-visible:outline-2 focus-visible:outline-offset-2",
+                "rounded-full border-2 bg-transparent",
+                "h-9 min-w-[2.25rem] px-3 text-sm",
+                scrolled || !isDark
+                  ? "border-ink-900 text-ink-900 focus-visible:outline-ink-900"
+                  : "border-white text-white focus-visible:outline-white",
+              )}
             >
-              <span aria-hidden="true">←</span>
+              <svg aria-hidden="true" className="h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M10 3L5 8l5 5" />
+              </svg>
             </Link>
           )}
           {nextHref && (
             <Link
               href={nextHref}
               aria-label={nextLabel}
-              className={buttonStyles("quiet", "sm")}
+              className={clsx(
+                "inline-flex items-center justify-center gap-2 font-heading transition-colors duration-200",
+                "outline-none focus-visible:outline-2 focus-visible:outline-offset-2",
+                "rounded-full border-2 bg-transparent",
+                "h-9 min-w-[2.25rem] px-3 text-sm",
+                scrolled || !isDark
+                  ? "border-ink-900 text-ink-900 focus-visible:outline-ink-900"
+                  : "border-white text-white focus-visible:outline-white",
+              )}
             >
-              <span aria-hidden="true">→</span>
+              <svg aria-hidden="true" className="h-4 w-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 3l5 5-5 5" />
+              </svg>
             </Link>
           )}
-        </nav>
+        </div>
       </Container>
     </header>
   );

@@ -19,7 +19,6 @@ import type {
   QuickCheckItem,
   StepSummaryItem,
   WhatToLookOutForItem,
-  WhatYouWillLearnItem,
   ExtraInfoItem,
   ExtraInfoCta,
 } from "@/components/walkthrough";
@@ -27,14 +26,8 @@ import type {
 /* ---------- Shared shapes --------------------------------------------------- */
 
 export type StepHeroContent = {
-  /** Eyebrow text — e.g. "Step 1 · Setup". */
-  eyebrow: string;
   title: string;
   lead: string;
-  /** Per-step time chip from PRD §10. */
-  time: string;
-  /** Optional placeholder text for the illustration slot until art lands. */
-  illustrationLabel?: string;
   /** Optional Wistia media id for an embedded hero video. */
   wistiaMediaId?: string;
   /** Required when `wistiaMediaId` is set — the SR title. */
@@ -48,7 +41,6 @@ export type StepSummaryContent = {
   title?: string;
   /** Optional total-time chip rendered next to the title. */
   totalTime?: string;
-  description?: string;
   items: StepSummaryItem[];
 };
 
@@ -129,10 +121,8 @@ export type StepNav = {
 export type SetupContent = {
   step: Extract<StepKey, "setup">;
   hero: StepHeroContent;
-  whatYouWillLearn: WhatYouWillLearnItem[];
   summary: StepSummaryContent;
   details: DetailSection[];
-  finalQuickCheck?: { title?: string; items: QuickCheckItem[] };
   peerQuote: PeerQuoteContent;
   extraInfo: ExtraInfoContent;
   nav: StepNav;
@@ -141,7 +131,6 @@ export type SetupContent = {
 export type FormContent = {
   step: Extract<StepKey, "form">;
   hero: StepHeroContent;
-  whatYouWillLearn: WhatYouWillLearnItem[];
   summary: StepSummaryContent;
   sampleCallout: {
     title: string;
@@ -167,10 +156,8 @@ export type FormContent = {
 export type ApplyContent = {
   step: Extract<StepKey, "apply">;
   hero: StepHeroContent;
-  whatYouWillLearn: WhatYouWillLearnItem[];
   summary: StepSummaryContent;
   details: DetailSection[];
-  finalQuickCheck?: { title?: string; items: QuickCheckItem[] };
   peerQuote: PeerQuoteContent;
   extraInfo: ExtraInfoContent;
   nav: StepNav;
@@ -187,7 +174,6 @@ export type WalkthroughContent = {
 export type LandingContent = {
   meta: { title: string; description: string };
   hero: {
-    eyebrow: string;
     headline: string;
     lead: string;
     primaryCta: { href: string; label: string };
@@ -202,14 +188,6 @@ export type LandingContent = {
     sub: string;
     image?: string;
   }[];
-  /** Three steps to make a stent — the live site's three-line teaser. */
-  threeSteps: { n: number; text: string }[];
-  /** Six-step surgical workflow — recap from the live site's page 1 + 4. */
-  surgicalProtocol: { n: number; text: string }[];
-  /** Three patient-handoff phases. */
-  patientInstructions: { phase: string; instruction: string }[];
-  /** Three workflow benefit cards. */
-  workflowBenefits: { title: string; sub: string }[];
   /** Six KOLs surfaced on the live site. */
   kols: { name: string; affiliation?: string; image?: string }[];
   evidence: {
@@ -232,8 +210,6 @@ export type LandingContent = {
       perStent: string;
     }[];
   };
-  /** Optional curated entry paths — see PRD §6. Skippable in v1. */
-  curatedPaths?: { title: string; sub: string; href: string }[];
   footerCta: {
     headline: string;
     body: string;
@@ -248,41 +224,31 @@ export type LandingContent = {
 const setup: SetupContent = {
   step: "setup",
   hero: {
-    eyebrow: "Step 1 · Setup",
-    title: "Set up the bath. Make the material mouldable.",
-    lead: "A one-time bath setup, then a per-patient sheet of PerioPlast® warmed into a stir-and-pull working consistency.",
-    time: "~5 min",
-    illustrationLabel: "water bath + cup + forceps",
+    title: "Prepare the bath and make the material mouldable.",
+    lead: "Warm the water bath once, then soften a sheet of PerioPlast® into a mouldable disk before each case.",
     wistiaMediaId: "t6ni3imsmb",
     wistiaTitle: "How to set up the water bath and make PerioPlast® mouldable",
   },
-  whatYouWillLearn: [
-    { title: "Set up & clean the water bath", href: "#bath-setup" },
-    { title: "Make PerioPlast® mouldable", href: "#material-prep" },
-    { title: "What's in the Starter Kit", href: "#starter-kit" },
-  ],
   summary: {
     totalTime: "~5 min",
-    description:
-      "A one-time bath setup, then a per-patient mouldable sheet. Skip ahead with the links if you've done this before.",
     items: [
       {
-        text: "Place cup holder, fill bath and cup with hot tap water.",
+        text: "Fill the bath and cup with tap water.",
         href: "#bath-setup",
         time: "~30 sec",
       },
       {
-        text: "Plug bath in, set to 80 °C / 180 °F.",
+        text: "Plug in and heat to 80 °C.",
         href: "#bath-setup",
         time: "~5 min",
       },
       {
-        text: "Glove up, Vaseline on, pour PerioPlast® into the cup.",
+        text: "Glove up, apply Vaseline, drop in one sheet of PerioPlast®.",
         href: "#material-prep",
         time: "~30 sec",
       },
       {
-        text: "Stir 10 seconds. Pull material off the forceps.",
+        text: "Stir 10 seconds — lift the fused disk off the forceps.",
         href: "#material-prep",
         time: "~10 sec",
       },
@@ -325,7 +291,7 @@ const setup: SetupContent = {
       id: "bath-setup",
       eyebrow: "Section #1",
       title: "Setting up your water bath",
-      lead: "Six steps. Once. The bath is reusable; only the steel cup is per-patient.",
+      lead: "Done once per practice. The bath is reusable — only the steel cup is replaced for each patient.",
       wistiaMediaId: "etpwfysw59",
       wistiaTitle: "Setting up your water bath",
       microSteps: [
@@ -339,7 +305,7 @@ const setup: SetupContent = {
           callouts: [
             {
               kind: "pro-tip",
-              body: "Fill the bath with hot tap water to speed up the heating time.",
+              body: "Fill the bath with tap water to speed up the heating time.",
             },
           ],
         },
@@ -377,7 +343,7 @@ const setup: SetupContent = {
       id: "material-prep",
       eyebrow: "Section #2",
       title: "Making PerioPlast® mouldable",
-      lead: "Eight steps, per patient. The material clumps into a chewing-gum consistency you can lift off the forceps in one piece.",
+      lead: "Done fresh for each patient. The material fuses into a soft, pliable ball that you lift off the forceps in one piece.",
       wistiaMediaId: "obigdfc34w",
       wistiaTitle: "Making PerioPlast® mouldable",
       microSteps: [
@@ -443,7 +409,7 @@ const setup: SetupContent = {
   ],
   peerQuote: {
     quote:
-      "Half my chair-time issue was waiting for the bath. Filling it with hot tap water cut the wait to under two minutes — that single tip changed my workflow more than the stent itself did.",
+      "Half my chair-time issue was waiting for the bath. Filling it with tap water cut the wait to under two minutes — that single tip changed my workflow more than the stent itself did.",
   },
   extraInfo: {
     title: "Cleaning the bath, cup, and cup holder",
@@ -474,37 +440,20 @@ const setup: SetupContent = {
 const form: FormContent = {
   step: "form",
   hero: {
-    eyebrow: "Step 2 · Form",
-    title: "Form the stent.",
-    lead: "Heat → disk → palate shape → trim. Four phases stacked, fifteen micro-steps total. Use the free sample your first time through.",
-    time: "~5–7 min",
-    illustrationLabel: "stent on palate, mid-form",
+    title: "Shape the heated material into a palatal stent.",
+    lead: "Press the warm disk onto the palate, have the patient bite into occlusion, and lift out a chairside stent in minutes.",
     wistiaMediaId: "xu6jr9bq42",
     wistiaTitle: "Making your 1st Elemental stent",
   },
-  whatYouWillLearn: [
-    {
-      title: "Four phases to a finished stent",
-      href: "#phases",
-      detail: "Heat → disk → palate shape → trim.",
-    },
-    {
-      title: "What to look out for",
-      href: "#what-to-look-out-for",
-      detail: "Four anti-patterns that cost you the practice sheet if missed.",
-    },
-  ],
   summary: {
-    label: "Four phases",
-    title: "Four phases to a finished stent:",
-    description:
-      "Heat → disk → palate shape → trim. Each phase is a distinct procedural movement.",
+    label: "Steps at a glance",
+    title: "Steps at a glance",
     totalTime: "~5–7 min",
     items: [
       { text: "Heat the material.", time: "~1 min" },
-      { text: "Make and place the disk.", time: "~1 min" },
-      { text: "Shape on the palate.", time: "~3 min" },
-      { text: "Trim and finish.", time: "~1–2 min" },
+      { text: "Shape and seat the disk on the palate.", time: "~1 min" },
+      { text: "Mould in full occlusion.", time: "~3 min" },
+      { text: "Trim the edges and check the fit.", time: "~1–2 min" },
     ],
   },
   sampleCallout: {
@@ -521,7 +470,7 @@ const form: FormContent = {
       title: "Heat the material",
       time: "~1 min",
       description:
-        "Pour one sheet of PerioPlast® into the steaming cup. Stir until the granules bind. Lift the disk off the forceps in one piece.",
+        "Drop one sheet of PerioPlast® into the steaming cup and stir for 10 seconds. The granules fuse into a soft, pliable ball. Lift it off the forceps in one piece.",
       microSteps: [
         {
           title: "Pour 1 sheet of PerioPlast® into the heated cup.",
@@ -541,10 +490,10 @@ const form: FormContent = {
     },
     {
       phaseNumber: 2,
-      title: "Make and place the disk",
+      title: "Shape the disk and place it on the palate",
       time: "~1 min",
       description:
-        "Press the heated material into a thin, even disk. Seat it sufficiently posterior and buccal in the mouth.",
+        "Press the warm material into a thin, even disk. Place it on the palate — far enough back to clear the anterior teeth, and wide enough to wrap around the buccal side.",
       microSteps: [
         {
           title: "Shape a disk by pressing the material. Don't stretch.",
@@ -583,10 +532,10 @@ const form: FormContent = {
     },
     {
       phaseNumber: 3,
-      title: "Shape on the palate",
+      title: "Mould the stent directly on the palate",
       time: "~3 min",
       description:
-        "Press onto occlusal surfaces, wrap vestibular, press palate, bite in full occlusion for 30 seconds, re-adapt.",
+        "Press the disk firmly onto the occlusal surfaces, then wrap it around the buccal side and push it tight against the palate. Ask the patient to bite into full occlusion and hold for 30 seconds. Re-adapt to the palatal contour to lock the stent interproximally.",
       microSteps: [
         {
           title: "Press the disk firmly onto the occlusal surfaces.",
@@ -618,10 +567,10 @@ const form: FormContent = {
     },
     {
       phaseNumber: 4,
-      title: "Trim and finish",
+      title: "Trim the edges and check the fit",
       time: "~1–2 min",
       description:
-        "Set in-situ, dunk in cold water to harden, trim if needed, then confirm fit with the patient.",
+        "Let the stent set in the mouth until you can no longer dent it. Remove it gently, then dunk in cold water to finish hardening. Trim any overextensions with scissors and have the patient confirm the fit.",
       microSteps: [
         {
           title: "Let the stent set in-situ. Remove gently once solid.",
@@ -759,52 +708,26 @@ const form: FormContent = {
 const apply: ApplyContent = {
   step: "apply",
   hero: {
-    eyebrow: "Step 3 · Apply",
-    title: "Apply during the surgery.",
-    lead: "Place the stent immediately after harvest to stabilise the clot. Five-day patient wear with a clean-and-replace daily routine after the first 24 hours.",
-    time: "during the surgery",
-    illustrationLabel: "stent in-situ post-harvest",
+    title: "Place the stent right after harvesting the graft.",
+    lead: "Seat the stent on the palatal wound right after harvesting — it stabilises the clot and replaces the need to suture.",
     wistiaMediaId: "vpsbhacjdc",
     wistiaTitle: "Clinical & financial implementation",
   },
-  whatYouWillLearn: [
-    {
-      title: "Surgical protocol",
-      href: "#surgical-protocol",
-      detail: "Six-step sequence around the graft.",
-    },
-    {
-      title: "Patient instructions",
-      href: "#patient-handoff",
-      detail: "First 24 h, day 2–4, day 5+.",
-    },
-    {
-      title: "Workflow benefits",
-      href: "#workflow",
-      detail: "Bleed-stop, speed, patient experience.",
-    },
-  ],
   summary: {
-    description:
-      "Six-step surgical protocol from the live site, page 4. The walkthrough's Apply step covers items 4–6; items 1–3 are surgeon's scope and recap-only.",
     items: [
       { text: "Make the stent before anaesthesia." },
       { text: "Prepare the recipient site." },
       { text: "Harvest the graft." },
-      {
-        text: "Place the stent immediately after harvesting to stabilise the blood clot.",
-      },
+      { text: "Place the stent immediately after harvest." },
       { text: "Position and stabilise the graft." },
-      {
-        text: "Patient wears the stent 5 days. First 24 h non-stop, then daily clean.",
-      },
+      { text: "Patient wears it 5 days — continuous on day 1, then daily to clean." },
     ],
   },
   details: [
     {
       id: "surgical-protocol",
       eyebrow: "Section #1",
-      title: "Surgical implementation",
+      title: "How to apply the stent during surgery",
       lead: "Six-step sequence. Item 4 is the moment of value — the stent goes in directly onto the donor site immediately after harvest, stabilising the blood clot before suturing would otherwise begin.",
       microSteps: [
         {
@@ -843,7 +766,7 @@ const apply: ApplyContent = {
       id: "patient-handoff",
       eyebrow: "Section #2",
       title: "Patient instructions",
-      lead: "Three phases. Hand the patient a printed copy or send a digital take-home card so the schedule isn't recalled from memory.",
+      lead: "Three phases over five days. Give the patient a printed or digital copy — the schedule is easy to forget without it.",
       microSteps: [
         {
           index: "2.1",
@@ -960,7 +883,6 @@ export const landing: LandingContent = {
       "Zinc-infused palatal stents formed directly on the palate. No suturing, no pain, no impressions. Stops post-operative bleeding the moment the graft is harvested.",
   },
   hero: {
-    eyebrow: "Introducing Elemental",
     headline: "Form a palatal stent in 5 minutes.",
     lead: "A zinc-infused thermoplastic disk shaped directly on the palate — no impressions, no lab.",
     primaryCta: {
@@ -989,38 +911,6 @@ export const landing: LandingContent = {
       title: "No impressions",
       sub: "Made directly on the palate.",
       image: "/images/seq1-3.png",
-    },
-  ],
-  threeSteps: [
-    { n: 1, text: "Pour 1 sheet in the water bath to make it mouldable." },
-    { n: 2, text: "Adapt it directly on the patient's palate." },
-    { n: 3, text: "The material sets in 2 minutes and your stent is ready." },
-  ],
-  surgicalProtocol: [
-    { n: 1, text: "Make the stent right before the surgery — before anaesthesia." },
-    { n: 2, text: "Prepare the recipient site." },
-    { n: 3, text: "Harvest the graft." },
-    { n: 4, text: "Place the stent immediately after harvesting to stabilise the blood clot." },
-    { n: 5, text: "Position and stabilise the graft." },
-    { n: 6, text: "Patient wears the stent for 5 days. First 24 h non-stop; daily clean from day 2." },
-  ],
-  patientInstructions: [
-    { phase: "First 24 h", instruction: "Wear the stent non-stop to stabilise the blood clot." },
-    { phase: "Day 2–4", instruction: "Remove once per day to clean, then place it back." },
-    { phase: "From day 5", instruction: "No pain? Remove the stent." },
-  ],
-  workflowBenefits: [
-    {
-      title: "The easiest way to stop the bleeding.",
-      sub: "No more stressful suturing in the palate. No post-operative bleeding.",
-    },
-    {
-      title: "The fastest way to make a stent.",
-      sub: "No more impressions, pouring models, or worrying about fit.",
-    },
-    {
-      title: "The best patient experience.",
-      sub: "Patients can eat with it. Not visible in the smile area. No bulk.",
     },
   ],
   kols: [
@@ -1067,29 +957,12 @@ export const landing: LandingContent = {
       },
     ],
   },
-  curatedPaths: [
-    {
-      title: "If you're evaluating",
-      sub: "60-second tour of the value props, KOLs, and evidence.",
-      href: "#value-props",
-    },
-    {
-      title: "If you're new to PerioPlast®",
-      sub: "Start at Setup — bath, material, first sample.",
-      href: "/walkthrough/setup",
-    },
-    {
-      title: "Quick refresher",
-      sub: "Skip to Form — the procedural core.",
-      href: "/walkthrough/form",
-    },
-  ],
   footerCta: {
     headline: "Ready to make your first stent?",
     body: "The Starter Kit ships with everything you need: water bath, cups, forceps, two boxes of PerioPlast®, and one practice sheet so the first attempt isn't on a patient.",
     cta: {
       href: "https://shop.withelemental.com/products/perioplast-intro-kit",
-      label: "Get the Starter Kit — $299 / €239",
+      label: "Get the Starter Kit",
     },
   },
 };

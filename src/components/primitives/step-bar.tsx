@@ -105,11 +105,24 @@ export function StepBar({
           </Link>
         </div>
 
+        {/* Mobile: current step only */}
+        <span
+          aria-hidden="true"
+          className={clsx(
+            "sm:hidden inline-flex items-baseline gap-1.5 text-sm font-semibold transition-colors duration-200",
+            scrolled || !isDark ? "text-brand-navy" : "text-white",
+          )}
+        >
+          <span className="font-mono text-xs">{STEP_NUMBER[currentStep]}</span>
+          <span className="lowercase">{STEP_LABEL[currentStep]}</span>
+        </span>
+
+        {/* Desktop: full step list */}
         <nav
           aria-label="Walkthrough progress"
-          className="flex items-center"
+          className="hidden sm:flex items-center"
         >
-          <ol className="flex items-center gap-3 sm:gap-5 text-sm">
+          <ol className="flex items-center gap-5 text-sm">
             {STEP_ORDER.map((step, i) => {
               const isCurrent = i === currentIndex;
               const href = stepHrefs?.[step];
@@ -131,10 +144,7 @@ export function StepBar({
 
               const content = (
                 <>
-                  <span
-                    aria-hidden="true"
-                    className="font-mono text-xs"
-                  >
+                  <span aria-hidden="true" className="font-mono text-xs">
                     {STEP_NUMBER[step]}
                   </span>
                   <span className="lowercase">{STEP_LABEL[step]}</span>
@@ -142,24 +152,18 @@ export function StepBar({
               );
 
               return (
-                <li key={step} className="flex items-center gap-3 sm:gap-5">
+                <li key={step} className="flex items-center gap-5">
                   {href && !isCurrent ? (
                     <Link
                       href={href}
                       aria-label={`Go to ${STEP_LABEL[step]}`}
                       aria-current={isCurrent ? "step" : undefined}
-                      className={clsx(
-                        labelClass,
-                        "outline-none focus-visible:underline focus-visible:underline-offset-4",
-                      )}
+                      className={clsx(labelClass, "outline-none focus-visible:underline focus-visible:underline-offset-4")}
                     >
                       {content}
                     </Link>
                   ) : (
-                    <span
-                      className={labelClass}
-                      aria-current={isCurrent ? "step" : undefined}
-                    >
+                    <span className={labelClass} aria-current={isCurrent ? "step" : undefined}>
                       {content}
                     </span>
                   )}

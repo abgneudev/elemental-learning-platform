@@ -1,7 +1,6 @@
 import { clsx } from "clsx";
 import type { ReactNode } from "react";
 import { Eyebrow } from "../primitives/eyebrow";
-import { SlashNumber } from "../primitives/slash-number";
 
 export type StepSummaryItem = {
   /** The summary line — one short imperative sentence. */
@@ -48,7 +47,12 @@ export function StepSummary({
         {items.map((item, i) => {
           const inner = (
             <>
-              <SlashNumber n={i + 1} tone={isDark ? "cream" : "blue"} className="pt-1" />
+              <span
+                aria-hidden="true"
+                className="flex h-7 w-7 flex-none items-center justify-center rounded-full bg-brand-red font-heading text-sm font-bold text-white"
+              >
+                {String.fromCharCode(65 + i)}
+              </span>
               <span className={clsx("text-xs font-normal leading-snug sm:text-sm", isDark ? "text-white" : "text-brand-navy")}>
                 {item.text}
               </span>
@@ -61,7 +65,7 @@ export function StepSummary({
           );
 
           const rowClass = clsx(
-            "grid grid-cols-[3rem_1fr_auto] items-baseline gap-x-5 gap-y-1 border-t py-5",
+            "grid grid-cols-[2.25rem_1fr_auto] items-center gap-x-5 gap-y-1 border-t py-5",
             isDark ? "border-white/15" : "border-hairline",
             i === items.length - 1 && "border-b",
             item.href &&

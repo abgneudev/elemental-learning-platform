@@ -10,8 +10,8 @@ export type StepKey = "setup" | "form" | "apply";
 const STEP_ORDER: readonly StepKey[] = ["setup", "form", "apply"] as const;
 
 const STEP_LABEL: Record<StepKey, string> = {
-  setup: "setup",
-  form: "form",
+  setup: "heat",
+  form: "mould",
   apply: "apply",
 };
 

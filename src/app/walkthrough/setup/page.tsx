@@ -6,7 +6,6 @@ import {
   StepBar,
   WistiaPlayer,
   buttonStyles,
-  Eyebrow,
 } from "@/components/primitives";
 import {
   ExtraInfoCard,
@@ -48,7 +47,6 @@ export default function SetupPage() {
       <PageTimeline
         sections={[
           { id: "setup-hero", label: "Overview" },
-          { id: "starter-kit", label: "Starter Kit" },
           { id: "bath-setup", label: "Water Bath" },
           { id: "material-prep", label: "Material Prep" },
         ]}
@@ -84,14 +82,34 @@ export default function SetupPage() {
           </Container>
         </section>
 
-        {/* ── Detail sections (cream) ───────────────────────────────────── */}
+        {/* ── What's in the Starter Kit ────────────────────────────────── */}
         <section className="border-b border-brand-navy/8 bg-cream">
-          <Container size="xl" className="flex flex-col gap-16 py-20 sm:gap-20 sm:py-28">
-            {(["bath-setup", "material-prep", "starter-kit"] as const)
-              .map((id) => setup.details.find((d) => d.id === id)!)
-              .map((section) => (
-                <DetailSection key={section.id} section={section} />
-              ))}
+          <Container size="xl" className="py-20 sm:py-28">
+            <DetailSection
+              section={setup.details.find((d) => d.id === "starter-kit")!}
+              index={0}
+              showLetter={false}
+            />
+          </Container>
+        </section>
+
+        {/* ── Step A: Bath Setup ────────────────────────────────────────── */}
+        <section id="bath-setup" className="border-b border-brand-navy/8 bg-cream">
+          <Container size="xl" className="py-20 sm:py-28">
+            <DetailSection
+              section={setup.details.find((d) => d.id === "bath-setup")!}
+              index={0}
+            />
+          </Container>
+        </section>
+
+        {/* ── Step B: Material Prep ─────────────────────────────────────── */}
+        <section id="material-prep" className="border-b border-brand-navy/8 bg-cream">
+          <Container size="xl" className="py-20 sm:py-28">
+            <DetailSection
+              section={setup.details.find((d) => d.id === "material-prep")!}
+              index={1}
+            />
           </Container>
         </section>
 
@@ -124,25 +142,28 @@ export default function SetupPage() {
   );
 }
 
-function DetailSection({ section }: { section: typeof setup.details[number] }) {
+function DetailSection({ section, index, showLetter = true }: { section: typeof setup.details[number]; index: number; showLetter?: boolean }) {
   return (
     <section
-      id={section.id}
       aria-labelledby={`${section.id}-title`}
-      className="scroll-mt-24"
     >
       <header className="flex flex-col gap-3">
-        {section.eyebrow && (
-          <Eyebrow tone="blue" size="md">
-            {section.eyebrow}
-          </Eyebrow>
-        )}
-        <h2
-          id={`${section.id}-title`}
-          className="font-heading text-2xl font-semibold leading-tight text-brand-navy sm:text-3xl"
-        >
-          {section.title}
-        </h2>
+        <div className="flex items-center gap-3">
+          {showLetter && (
+            <span
+              aria-hidden="true"
+              className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-brand-red font-heading text-xl font-bold text-white"
+            >
+              {String.fromCharCode(65 + index)}
+            </span>
+          )}
+          <h2
+            id={`${section.id}-title`}
+            className="font-heading text-2xl font-semibold leading-tight text-brand-navy sm:text-3xl"
+          >
+            {section.title}
+          </h2>
+        </div>
         {section.lead && (
           <p className="max-w-prose text-base leading-snug text-brand-navy/75">
             {section.lead}

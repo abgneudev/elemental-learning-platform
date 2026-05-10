@@ -3,7 +3,6 @@ import Link from "next/link";
 import { clsx } from "clsx";
 import {
   Container,
-  Eyebrow,
   StepBar,
   WistiaPlayer,
   buttonStyles,
@@ -42,12 +41,13 @@ export default function ApplyPage() {
           apply: "/walkthrough/apply",
         }}
       />
-
+  
       <PageTimeline
         sections={[
           { id: "apply-hero", label: "Overview" },
           { id: "surgical-protocol", label: "Surgical Protocol" },
           { id: "patient-handoff", label: "Patient Handoff" },
+          { id: "workflow", label: "Workflow" },
         ]}
       />
 
@@ -81,12 +81,24 @@ export default function ApplyPage() {
           </Container>
         </section>
 
-        {/* ── Detail sections (cream) ───────────────────────────────────── */}
-        <section className="border-b border-brand-navy/8 bg-cream">
-          <Container size="xl" className="flex flex-col gap-16 py-20 sm:gap-20 sm:py-28">
-            {apply.details.map((section) => (
-              <DetailSection key={section.id} section={section} />
-            ))}
+        {/* ── Step A: Surgical Protocol ─────────────────────────────────── */}
+        <section id="surgical-protocol" className="border-b border-brand-navy/8 bg-cream">
+          <Container size="xl" className="py-20 sm:py-28">
+            <DetailSection section={apply.details[0]} index={0} />
+          </Container>
+        </section>
+
+        {/* ── Step B: Patient Handoff ───────────────────────────────────────── */}
+        <section id="patient-handoff" className="border-b border-brand-navy/8 bg-cream">
+          <Container size="xl" className="py-20 sm:py-28">
+            <DetailSection section={apply.details[1]} index={1} />
+          </Container>
+        </section>
+
+        {/* ── Step C: Workflow ──────────────────────────────────────────────── */}
+        <section id="workflow" className="border-b border-brand-navy/8 bg-cream">
+          <Container size="xl" className="py-20 sm:py-28">
+            <DetailSection section={apply.details[2]} index={2} />
           </Container>
         </section>
 
@@ -119,25 +131,26 @@ export default function ApplyPage() {
   );
 }
 
-function DetailSection({ section }: { section: typeof apply.details[number] }) {
+function DetailSection({ section, index }: { section: typeof apply.details[number]; index: number }) {
   return (
     <section
-      id={section.id}
       aria-labelledby={`${section.id}-title`}
-      className="scroll-mt-24"
     >
       <header className="flex flex-col gap-3">
-        {section.eyebrow && (
-          <Eyebrow tone="blue" size="md">
-            {section.eyebrow}
-          </Eyebrow>
-        )}
-        <h2
-          id={`${section.id}-title`}
-          className="font-heading text-2xl font-semibold leading-tight text-brand-navy sm:text-3xl"
-        >
-          {section.title}
-        </h2>
+        <div className="flex items-center gap-3">
+          <span
+            aria-hidden="true"
+            className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-brand-red font-heading text-xl font-bold text-white"
+          >
+            {String.fromCharCode(65 + index)}
+          </span>
+          <h2
+            id={`${section.id}-title`}
+            className="font-heading text-2xl font-semibold leading-tight text-brand-navy sm:text-3xl"
+          >
+            {section.title}
+          </h2>
+        </div>
         {section.lead && (
           <p className="max-w-prose text-base leading-snug text-brand-navy/75">
             {section.lead}

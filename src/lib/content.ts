@@ -233,24 +233,14 @@ const setup: SetupContent = {
     totalTime: "~5 min",
     items: [
       {
-        text: "Fill the bath and cup with tap water.",
-        href: "#bath-setup",
-        time: "~30 sec",
-      },
-      {
-        text: "Plug in and heat to 80 °C.",
+        text: "Set up the water bath.",
         href: "#bath-setup",
         time: "~5 min",
       },
       {
-        text: "Glove up, apply Vaseline, drop in one sheet of PerioPlast®.",
+        text: "Make PerioPlast® mouldable.",
         href: "#material-prep",
         time: "~30 sec",
-      },
-      {
-        text: "Stir 10 seconds — lift the fused disk off the forceps.",
-        href: "#material-prep",
-        time: "~10 sec",
       },
     ],
   },
@@ -450,10 +440,10 @@ const form: FormContent = {
     title: "Steps at a glance",
     totalTime: "~5–7 min",
     items: [
-      { text: "Heat the material.", time: "~1 min" },
-      { text: "Shape and seat the disk on the palate.", time: "~1 min" },
-      { text: "Mould in full occlusion.", time: "~3 min" },
-      { text: "Trim the edges and check the fit.", time: "~1–2 min" },
+      { text: "Heat the material.", time: "~1 min", href: "#phase-1" },
+      { text: "Shape and seat the disk on the palate.", time: "~1 min", href: "#phase-2" },
+      { text: "Mould in full occlusion.", time: "~3 min", href: "#phase-3" },
+      { text: "Trim the edges and check the fit.", time: "~1–2 min", href: "#phase-4" },
     ],
   },
   sampleCallout: {
@@ -715,12 +705,9 @@ const apply: ApplyContent = {
   },
   summary: {
     items: [
-      { text: "Make the stent before anaesthesia." },
-      { text: "Prepare the recipient site." },
-      { text: "Harvest the graft." },
-      { text: "Place the stent immediately after harvest." },
-      { text: "Position and stabilise the graft." },
-      { text: "Patient wears it 5 days — continuous on day 1, then daily to clean." },
+      { text: "Surgical protocol.", href: "#surgical-protocol" },
+      { text: "Patient handoff.", href: "#patient-handoff" },
+      { text: "Workflow upgrade.", href: "#workflow" },
     ],
   },
   details: [

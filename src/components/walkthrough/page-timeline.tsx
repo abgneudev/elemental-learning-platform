@@ -21,6 +21,7 @@ const DOT_HALF = 14; // half of h-7 = 28 px
 
 export function PageTimeline({ sections }: PageTimelineProps) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const activeIndexRef = useRef(0);
   const rafRef = useRef<number | null>(null);
 
   // ── Scroll spy ────────────────────────────────────────────────────────────
@@ -40,6 +41,7 @@ export function PageTimeline({ sections }: PageTimelineProps) {
         }
       }
       setActiveIndex(next);
+      activeIndexRef.current = next;
     };
 
     const onScroll = () => {
@@ -62,11 +64,20 @@ export function PageTimeline({ sections }: PageTimelineProps) {
   // ── Navigation ────────────────────────────────────────────────────────────
   const scrollToSection = useCallback(
     (index: number) => {
+      if (index === 0) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
       const el = document.getElementById(sections[index].id);
-      el?.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (!el) return;
+      const top = el.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top, behavior: "smooth" });
     },
     [sections],
   );
+
+  const scrollPrev = useCallback(() => scrollToSection(activeIndexRef.current - 1), [scrollToSection]);
+  const scrollNext = useCallback(() => scrollToSection(activeIndexRef.current + 1), [scrollToSection]);
 
   const canPrev = activeIndex > 0;
   const canNext = activeIndex < sections.length - 1;
@@ -137,13 +148,13 @@ export function PageTimeline({ sections }: PageTimelineProps) {
           direction="up"
           disabled={!canPrev}
           aria-label="Previous section"
-          onClick={() => canPrev && scrollToSection(activeIndex - 1)}
+          onClick={scrollPrev}
         />
         <NavArrow
           direction="down"
           disabled={!canNext}
           aria-label="Next section"
-          onClick={() => canNext && scrollToSection(activeIndex + 1)}
+          onClick={scrollNext}
         />
       </div>
     </>

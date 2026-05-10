@@ -16,6 +16,7 @@ const config: Config = {
         "brand-cyan": "#caf0f8",
         "brand-mint": "#d6eedb",
         "brand-orange": "#fc9f5b",
+        "brand-red": "#DD3900",
         cream: "#f8f6f4",
 
         // Brand — matte / desaturated variants for healthcare calm.

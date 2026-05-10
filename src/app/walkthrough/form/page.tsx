@@ -211,7 +211,10 @@ export default function FormPage() {
       <PageTimeline
         sections={[
           { id: "form-hero", label: "Overview" },
-          { id: "phases", label: "4 Phases" },
+          { id: "phase-1", label: "A · Heat" },
+          { id: "phase-2", label: "B · Shape" },
+          { id: "phase-3", label: "C · Mould" },
+          { id: "phase-4", label: "D · Trim" },
           { id: "what-to-look-out-for", label: "What to Look Out For" },
         ]}
       />
@@ -267,84 +270,85 @@ export default function FormPage() {
         </section>
 
         {/* ── Phase sections (cream) ────────────────────────────────────── */}
-        <section className="border-b border-brand-navy/8 bg-cream">
-          <Container size="xl" className="py-20 sm:py-24">
-            <div id="phases" className="flex scroll-mt-24 flex-col gap-4 sm:gap-6">
-              {form.phases.map((phase) => {
-                const heroVideo = phaseHeroVideo(phase.phaseNumber);
-                const decoratedQuickCheck = phase.quickCheck
-                  ? {
-                      ...phase.quickCheck,
-                      items: decorateQuickCheck(
-                        phase.phaseNumber,
-                        phase.quickCheck.items,
-                      ),
-                    }
-                  : undefined;
+        {form.phases.map((phase) => {
+          const heroVideo = phaseHeroVideo(phase.phaseNumber);
+          const decoratedQuickCheck = phase.quickCheck
+            ? {
+                ...phase.quickCheck,
+                items: decorateQuickCheck(phase.phaseNumber, phase.quickCheck.items),
+              }
+            : undefined;
 
-                return (
-                  <PhaseSection
-                    key={phase.phaseNumber}
-                    phaseNumber={phase.phaseNumber}
-                    title={phase.title}
-                    time={phase.time}
-                    description={
-                      <>
-                        {phase.description}
-                        {heroVideo && (
-                          <div className="mt-6">
-                            <WistiaPlayer
-                              mediaId={heroVideo.mediaId}
-                              title={heroVideo.title}
-                              aspect="16x9"
-                            />
-                          </div>
-                        )}
-                      </>
-                    }
-                    microSteps={phase.microSteps.map((step, i) =>
-                      toPhaseMicroStep(step, microStepVideos[phase.phaseNumber]?.[i])
-                    )}
-                    beforeCheck={
-                      phase.toFinish ? (
-                        <ToFinishCard
-                          title={phase.toFinish.title}
-                          duration={phase.toFinish.duration}
-                        >
-                          {phase.toFinish.body}
-                        </ToFinishCard>
-                      ) : undefined
-                    }
-                  >
-                    {decoratedQuickCheck && (
-                      <QuickCheck
-                        title={decoratedQuickCheck.title}
-                        items={decoratedQuickCheck.items}
-                      />
-                    )}
-                  </PhaseSection>
-                );
-              })}
-            </div>
-          </Container>
-        </section>
+          return (
+            <section
+              key={phase.phaseNumber}
+              id={`phase-${phase.phaseNumber}`}
+              className="border-b border-brand-navy/8 bg-cream"
+            >
+              <Container size="xl" className="py-20 sm:py-28">
+                <PhaseSection
+                  phaseNumber={phase.phaseNumber}
+                  title={phase.title}
+                  time={phase.time}
+                  description={
+                    <>
+                      {phase.description}
+                      {heroVideo && (
+                        <div className="mt-6">
+                          <WistiaPlayer
+                            mediaId={heroVideo.mediaId}
+                            title={heroVideo.title}
+                            aspect="16x9"
+                          />
+                        </div>
+                      )}
+                    </>
+                  }
+                  microSteps={phase.microSteps.map((step, i) =>
+                    toPhaseMicroStep(step, microStepVideos[phase.phaseNumber]?.[i])
+                  )}
+                  beforeCheck={
+                    phase.toFinish ? (
+                      <ToFinishCard
+                        title={phase.toFinish.title}
+                        duration={phase.toFinish.duration}
+                      >
+                        {phase.toFinish.body}
+                      </ToFinishCard>
+                    ) : undefined
+                  }
+                >
+                  {decoratedQuickCheck && (
+                    <QuickCheck
+                      title={decoratedQuickCheck.title}
+                      items={decoratedQuickCheck.items}
+                    />
+                  )}
+                </PhaseSection>
+              </Container>
+            </section>
+          );
+        })}
 
-        {/* ── Great stent + look-out-for (azure tint) ──────────────────── */}
+        {/* ── Great stent reference (azure tint) ────────────────────────────── */}
         <section className="border-b border-brand-navy/8 bg-azure">
-          <Container size="xl" className="flex flex-col gap-20 py-20 sm:gap-24 sm:py-28">
+          <Container size="xl" className="py-20 sm:py-28">
             <GreatStentReference
               title={form.greatStentReference.title}
               description={form.greatStentReference.description}
               items={greatStentItems}
             />
+          </Container>
+        </section>
 
-            <div id="what-to-look-out-for" className="scroll-mt-24">
-              <WhatToLookOutFor
-                title={form.whatToLookOutFor.title}
-                description={form.whatToLookOutFor.description}
-                items={lookoutItems}
-              />
-            </div>
+        {/* ── What to look out for (azure tint) ─────────────────────────────── */}
+        <section id="what-to-look-out-for" className="border-b border-brand-navy/8 bg-azure">
+          <Container size="xl" className="py-20 sm:py-28">
+            <WhatToLookOutFor
+              title={form.whatToLookOutFor.title}
+              description={form.whatToLookOutFor.description}
+              items={lookoutItems}
+            />
           </Container>
         </section>
 

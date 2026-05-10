@@ -54,7 +54,7 @@ export function ExpandableCards({ cards }: ExpandableCardsProps) {
               {/* Letter badge */}
               <span
                 aria-hidden="true"
-                className="mb-2 flex h-9 w-9 flex-none items-center justify-center rounded-full bg-brand-orange font-heading text-xl font-bold text-brand-navy"
+                className="mb-2 flex h-9 w-9 flex-none items-center justify-center rounded-full bg-brand-red font-heading text-xl font-bold text-white"
               >
                 {String.fromCharCode(65 + i)}
               </span>

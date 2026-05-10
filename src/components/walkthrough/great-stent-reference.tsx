@@ -43,7 +43,6 @@ export function GreatStentReference({
       aria-label={typeof title === "string" ? title : label}
       className={clsx("flex flex-col gap-8 py-10 sm:py-12", className)}
     >
-      <Hairline />
       <div className="flex flex-col gap-4">
         <Eyebrow tone="blue" size="md">
           {label}
@@ -79,7 +78,6 @@ export function GreatStentReference({
           </li>
         ))}
       </ol>
-      <Hairline />
     </section>
   );
 }

@@ -43,7 +43,6 @@ export function WhatToLookOutFor({
       aria-label={typeof title === "string" ? title : label}
       className={clsx("flex flex-col gap-8 py-10 sm:py-12", className)}
     >
-      <Hairline />
       <div className="flex flex-col gap-4">
         <Eyebrow tone="orange" size="md">
           {label}
@@ -84,7 +83,6 @@ export function WhatToLookOutFor({
           </li>
         ))}
       </ul>
-      <Hairline />
     </section>
   );
 }

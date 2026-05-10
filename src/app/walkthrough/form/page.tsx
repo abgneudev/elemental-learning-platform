@@ -247,7 +247,7 @@ export default function FormPage() {
         </section>
 
         {/* ── Sample callout (cream) ────────────────────────────────────── */}
-        <section className="border-b border-brand-navy/8 bg-cream">
+        <section className="border-b border-brand-navy/8 bg-brand-navy">
           <Container size="xl" className="flex flex-col gap-12 py-20 sm:gap-14 sm:py-28">
             <SampleCallout
               title={form.sampleCallout.title}

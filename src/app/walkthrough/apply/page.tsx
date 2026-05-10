@@ -10,6 +10,7 @@ import {
 } from "@/components/primitives";
 import {
   ExtraInfoCard,
+  PageTimeline,
   PeerQuote,
   QuickCheck,
   StepHero,
@@ -42,9 +43,17 @@ export default function ApplyPage() {
         }}
       />
 
+      <PageTimeline
+        sections={[
+          { id: "apply-hero", label: "Overview" },
+          { id: "surgical-protocol", label: "Surgical Protocol" },
+          { id: "patient-handoff", label: "Patient Handoff" },
+        ]}
+      />
+
       <main className="text-brand-navy">
-        {/* ── Hero band (azure tint — step colour for Apply) ────────────── */}
-        <section className="border-b border-brand-navy/8 bg-azure">
+        {/* ── Hero band (azure tint — step colour for Apply) ──────────── */}
+        <section id="apply-hero" className="border-b border-brand-navy/8 bg-azure">
           <Container size="xl" className="pb-20 pt-28 sm:pb-40 sm:pt-40">
             <div className="flex flex-col gap-10">
               <StepHero description={`Part 3: ${apply.hero.lead}`} />

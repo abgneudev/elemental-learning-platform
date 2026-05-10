@@ -28,4 +28,7 @@ export { PeerQuote } from "./peer-quote";
 export type { PeerQuoteAuthor } from "./peer-quote";
 
 export { ExtraInfoCard } from "./extra-info-card";
+
+export { PageTimeline } from "./page-timeline";
+export type { TimelineSection } from "./page-timeline";
 export type { ExtraInfoItem, ExtraInfoCta } from "./extra-info-card";

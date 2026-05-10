@@ -4,10 +4,10 @@ import type { ComponentPropsWithoutRef, ReactNode } from "react";
 export type ContainerSize = "sm" | "md" | "lg" | "xl";
 
 const widths: Record<ContainerSize, string> = {
-  sm: "max-w-3xl",
-  md: "max-w-5xl",
-  lg: "max-w-6xl",
-  xl: "max-w-7xl",
+  sm: "max-w-[80%]",
+  md: "max-w-[85%]",
+  lg: "max-w-[90%]",
+  xl: "max-w-[95%]",
 };
 
 type ContainerProps = Omit<ComponentPropsWithoutRef<"div">, "children"> & {

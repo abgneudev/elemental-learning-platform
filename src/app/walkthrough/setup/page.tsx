@@ -10,6 +10,7 @@ import {
 } from "@/components/primitives";
 import {
   ExtraInfoCard,
+  PageTimeline,
   PeerQuote,
   QuickCheck,
   StepHero,
@@ -44,9 +45,18 @@ export default function SetupPage() {
         }}
       />
 
+      <PageTimeline
+        sections={[
+          { id: "setup-hero", label: "Overview" },
+          { id: "starter-kit", label: "Starter Kit" },
+          { id: "bath-setup", label: "Water Bath" },
+          { id: "material-prep", label: "Material Prep" },
+        ]}
+      />
+
       <main className="text-brand-navy">
         {/* ── Hero band (azure tint — step colour) ─────────────────────── */}
-        <section className="border-b border-brand-navy/8 bg-azure">
+        <section id="setup-hero" className="border-b border-brand-navy/8 bg-azure">
           <Container size="xl" className="pb-20 pt-28 sm:pb-40 sm:pt-40">
             <div className="flex flex-col gap-10">
               <StepHero description={`Part 1: ${setup.hero.lead}`} />

@@ -51,11 +51,21 @@ function Hero() {
         <div className="flex flex-1 min-w-0 flex-col gap-6">
           <h1
             id="hero-headline"
-            className="font-heading text-step-mobile-lg leading-[1.02] tracking-tighter text-white sm:text-step-desktop-lg"
+            className="font-heading text-step-mobile-lg leading-[1.02] tracking-tighter text-white sm:text-step-desktop-lg max-w-[16ch]"
           >
             {hero.headline}
           </h1>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-0.4">
+          {/* Stent illustration — centrepiece between copy and video */}
+            <div className="hidden lg:flex flex-none items-center justify-center w-24 xl:w-24 shrink-0 opacity-40">
+              <Image
+                src="/images/sten.png"
+                alt="Elemental stent"
+                width={224}
+                height={224}
+                className="w-full h-auto drop-shadow-lg"
+              />
+            </div>
             <p className="font-heading text-lg font-bold text-white sm:text-xl">
               Heat. Mould. Apply.
             </p>
@@ -96,7 +106,7 @@ function Hero() {
 
         {/* Video */}
         <div className="relative flex-1 min-w-0">
-          <div className="overflow-hidden rounded-2xl border-4 border-white bg-white/5 shadow-xl">
+          <div className="overflow-hidden rounded-xl border-6 border-brand-navy bg-white/5 shadow-xl">
             <WistiaPlayer mediaId={hero.wistiaMediaId} title={hero.wistiaTitle} />
           </div>
         </div>

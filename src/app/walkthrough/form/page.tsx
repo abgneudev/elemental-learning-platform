@@ -11,6 +11,7 @@ import {
 import {
   ExtraInfoCard,
   GreatStentReference,
+  PageTimeline,
   PeerQuote,
   PhaseSection,
   QuickCheck,
@@ -207,9 +208,17 @@ export default function FormPage() {
         }}
       />
 
+      <PageTimeline
+        sections={[
+          { id: "form-hero", label: "Overview" },
+          { id: "phases", label: "4 Phases" },
+          { id: "what-to-look-out-for", label: "What to Look Out For" },
+        ]}
+      />
+
       <main className="text-brand-navy">
-        {/* ── Hero band (azure tint — step colour for Form step) ───────── */}
-        <section className="border-b border-brand-navy/8 bg-azure">
+        {/* ── Hero band (azure tint — step colour for Form step) ─────────── */}
+        <section id="form-hero" className="border-b border-brand-navy/8 bg-azure">
           <Container size="xl" className="pb-20 pt-28 sm:pb-40 sm:pt-40">
             <div className="flex flex-col gap-10">
               <StepHero description={`Part 2: ${form.hero.lead}`} />

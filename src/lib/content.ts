@@ -23,6 +23,12 @@ import type {
   ExtraInfoCta,
 } from "@/components/walkthrough";
 
+/* ---------- TODO: replace before client review ----------------------------- */
+
+// TODO: Replace with the real Elemental contact address. Used by /contact and
+// the contact link surfaced from the global footer + final-lesson DoneCard.
+export const CONTACT_EMAIL_TODO = "hello@withelemental.com";
+
 /* ---------- Shared shapes --------------------------------------------------- */
 
 export type StepHeroContent = {
@@ -171,6 +177,29 @@ export type WalkthroughContent = {
 
 /* ---------- Landing-shaped content ----------------------------------------- */
 
+export type PeerReviewContent = {
+  /** Practitioner name. Existing live-site quotes are anonymised, so the
+   *  initial values use "Periodontist" — replace once releases are signed. */
+  name: string;
+  /** Years of practice / sub-specialty / city — whatever the slide credits. */
+  role: string;
+  /** One-line pull-quote rendered under the video. */
+  pullQuote: string;
+  /** TODO: real Mux/Wistia/CDN .mp4 src for the vertical short. */
+  videoSrc: string;
+  /** TODO: poster frame shown before the video plays. */
+  posterSrc: string;
+};
+
+export type PatientTestimonialContent = {
+  name: string;
+  /** City or short context label, e.g. "Berlin, DE" or "Free gingival graft". */
+  context: string;
+  quote: string;
+  /** Optional ISO-ish date or month/year of the procedure. */
+  procedureDate?: string;
+};
+
 export type LandingContent = {
   meta: { title: string; description: string };
   hero: {
@@ -190,6 +219,10 @@ export type LandingContent = {
   }[];
   /** Six KOLs surfaced on the live site. */
   kols: { name: string; affiliation?: string; image?: string }[];
+  /** Practitioner video shorts shown in the carousel. */
+  peerReviews: PeerReviewContent[];
+  /** Patient testimonials shown after the peer carousel. */
+  patientTestimonials: PatientTestimonialContent[];
   evidence: {
     title: string;
     journal: string;
@@ -901,6 +934,58 @@ export const landing: LandingContent = {
     { name: "Prof. Dr. Yusuke Hamada", affiliation: "Indianapolis, USA", image: "/images/yusuke.png" },
     { name: "Prof. Dr. Giulio Rasperini", affiliation: "Milan, Italy", image: "/images/giulio.png" },
     { name: "Dr. Homa Zadeh", affiliation: "Los Angeles, USA", image: "/images/homa.png" },
+  ],
+  // Existing on-site quotes — moved out of page.tsx so the carousel renders
+  // from data. videoSrc / posterSrc are placeholders until the shorts are cut.
+  peerReviews: [
+    {
+      name: "Periodontist",
+      role: "14 years' practice",
+      pullQuote:
+        "No more stressful suturing in the palate. No post-operative bleeding. It changes the whole feel of the harvest.",
+      videoSrc: "", // TODO: vertical 9:16 short — replace with real CDN src
+      posterSrc: "", // TODO: poster frame for the short
+    },
+    {
+      name: "Periodontist",
+      role: "7 years' practice",
+      pullQuote:
+        "No impressions, no pouring models, no lab coordination. I made my first stent between two cases.",
+      videoSrc: "", // TODO: vertical 9:16 short — replace with real CDN src
+      posterSrc: "", // TODO: poster frame for the short
+    },
+    {
+      name: "Periodontist",
+      role: "22 years' practice",
+      pullQuote:
+        "Patients can eat with it and it's not visible in the smile area. That alone improves the conversation at day one.",
+      videoSrc: "", // TODO: vertical 9:16 short — replace with real CDN src
+      posterSrc: "", // TODO: poster frame for the short
+    },
+  ],
+  // TODO: replace with real testimonials cleared by the patients in writing.
+  patientTestimonials: [
+    {
+      name: "Patient A.",
+      context: "Free gingival graft · upper-right",
+      quote:
+        "Day one felt tight, not painful. By the third day I forgot it was there until I cleaned it.",
+      procedureDate: "March 2025",
+    },
+    {
+      name: "Patient M.",
+      context: "Connective-tissue graft · upper-left",
+      quote:
+        "I ate normally the same evening. No bleeding, no gauze swaps — that alone made the recovery feel different.",
+      procedureDate: "April 2025",
+    },
+    {
+      name: "Patient L.",
+      context: "Free gingival graft · lower-anterior",
+      quote:
+        "My dentist showed me the stent before the surgery and I could see exactly what would protect the wound. That removed most of the anxiety.",
+      procedureDate: "January 2025",
+    },
   ],
   evidence: {
     title:

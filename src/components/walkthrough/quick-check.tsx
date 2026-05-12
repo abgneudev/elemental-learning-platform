@@ -1,5 +1,6 @@
 import { clsx } from "clsx";
 import type { ReactNode } from "react";
+import { Container } from "@/components/primitives";
 
 export type QuickCheckItem = {
   caption: ReactNode;
@@ -19,9 +20,9 @@ type QuickCheckProps = {
 };
 
 /**
- * Per visual-direction.md §QuickCheck: "Not a card with a fill. Small mono
- * caption left, then a 2-column row of photographs with one-line captions
- * below. Hairlines top and bottom of the block. Photography does the work."
+ * Full-bleed warning band. Spans screen-edge to screen-edge with the
+ * brand-yellow ("yellow") surface; mirrors the Starter Kit navy band's
+ * shape so consecutive walkthrough sections share a rhythm.
  */
 export function QuickCheck({
   title,
@@ -29,47 +30,55 @@ export function QuickCheck({
   items,
   className,
 }: QuickCheckProps) {
+  // Lock to a 3-up layout so 2-item grids don't stretch each image to half
+  // the viewport. 4-item grids step up to 4 columns on large screens.
   const cols =
     items.length >= 4
       ? "sm:grid-cols-2 lg:grid-cols-4"
-      : items.length === 3
-        ? "sm:grid-cols-3"
-        : "sm:grid-cols-2";
+      : "sm:grid-cols-3";
 
   return (
     <section
       aria-label={label}
-      className={clsx("flex flex-col gap-6 py-8", className)}
+      className={clsx("border-b border-white/10 bg-brand-yellow", className)}
     >
-      {title && (
-        <h3 className="font-heading text-xl font-semibold text-brand-navy sm:text-2xl">
-          {title}
-        </h3>
-      )}
-      <ul className={clsx("grid grid-cols-1 gap-6 sm:gap-8", cols)}>
-        {items.map((item, i) => (
-          <li key={i} className="flex flex-col gap-3">
-            <div className="flex items-center gap-3">
-              <span
-                aria-hidden="true"
-                className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-brand-orange font-heading text-base font-bold text-white"
-              >
-                !
-              </span>
-              <p className="font-heading text-base font-bold leading-snug text-brand-navy">
-                {item.caption}
-              </p>
-            </div>
-            <div className="relative aspect-[15/7] overflow-hidden bg-[#222525]/4">
-              {item.image ?? (
-                <div className="flex h-full w-full items-center justify-center px-4 text-center font-mono text-xs text-brand-navy/40">
-                  {item.imageLabel ?? "reference image"}
+      <Container size="xl" className="py-20 sm:py-28">
+        <div className="flex flex-col gap-8">
+          {title && (
+            <p className="font-heading text-lg font-bold text-white sm:text-xl">
+              {title}
+            </p>
+          )}
+          <ul className={clsx("grid w-full grid-cols-1 gap-4 sm:gap-4", cols)}>
+            {items.map((item, i) => (
+              <li key={i} className="flex flex-1 flex-col gap-3">
+                <div className="flex items-center gap-2">
+                  <span
+                    aria-hidden="true"
+                    className="flex h-6 w-6 flex-none items-center justify-center rounded-full bg-white font-heading text-xs font-bold text-brand-yellow"
+                  >
+                    !
+                  </span>
+                  <p className="min-w-0 whitespace-nowrap font-heading text-xs font-bold leading-tight tracking-tight text-white sm:text-sm">
+                    {item.caption}
+                  </p>
                 </div>
-              )}
-            </div>
-          </li>
-        ))}
-      </ul>
+                <div className="relative aspect-[7/6] w-full overflow-hidden rounded-lg bg-white/15">
+                  {item.image ? (
+                    <div className="absolute inset-0 [&>*]:h-full [&>*]:w-full [&>img]:object-cover">
+                      {item.image}
+                    </div>
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center px-4 text-center font-mono text-xs text-white/55">
+                      {item.imageLabel ?? "reference image"}
+                    </div>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </Container>
     </section>
   );
 }

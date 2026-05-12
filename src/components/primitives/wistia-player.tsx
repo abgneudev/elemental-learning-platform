@@ -16,6 +16,12 @@ type WistiaPlayerProps = {
   autoPlay?: boolean;
   playerColor?: string;
   className?: string;
+  /**
+   * When true, the video crops to fill its container instead of
+   * letterboxing. Use when the player sits inside a parent whose
+   * aspect doesn't match the source video.
+   */
+  fillContainer?: boolean;
 };
 
 export function WistiaPlayer({
@@ -25,12 +31,14 @@ export function WistiaPlayer({
   autoPlay = false,
   playerColor,
   className,
+  fillContainer = false,
 }: WistiaPlayerProps) {
   const params = new URLSearchParams({
     seo: "true",
   });
   if (autoPlay) params.set("autoPlay", "true");
   if (playerColor) params.set("playerColor", playerColor.replace(/^#/, ""));
+  if (fillContainer) params.set("fitStrategy", "cover");
 
   const src = `https://fast.wistia.net/embed/iframe/${mediaId}?${params.toString()}`;
 

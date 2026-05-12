@@ -1,10 +1,10 @@
+import { Fragment } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import {
   Container,
   StepBar,
-  VideoDialog,
   WistiaPlayer,
   buttonStyles,
 } from "@/components/primitives";
@@ -26,6 +26,7 @@ import {
   type WhatToLookOutForItem,
 } from "@/components/walkthrough";
 import { walkthrough } from "@/lib/content";
+import { Footer } from "@/components/landing/footer";
 import {
   greatStentImages,
   icons,
@@ -278,60 +279,58 @@ export default function FormPage() {
               }
             : undefined;
 
-          const description = (
-            <>
-              {phase.description}
-              {heroVideo && (
-                <div className="mt-3">
-                  <VideoDialog
+          const overview = heroVideo
+            ? {
+                image: (
+                  <WistiaPlayer
                     mediaId={heroVideo.mediaId}
                     title={heroVideo.title}
-                    buttonLabel="Watch phase overview"
+                    fillContainer
                   />
-                </div>
-              )}
-            </>
-          );
+                ),
+              }
+            : undefined;
 
           return (
-            <section
-              key={phase.phaseNumber}
-              id={`phase-${phase.phaseNumber}`}
-              className="border-b border-brand-navy/8 bg-cream"
-            >
-              <Container size="xl" className="py-20 sm:py-28">
-                <TabbedPhase
-                  phaseNumber={phase.phaseNumber}
-                  title={phase.title}
-                  time={phase.time}
-                  description={description}
-                  steps={phase.microSteps.map((step, i) =>
-                    toTabbedPhaseStep(
-                      step,
-                      microStepVideos[phase.phaseNumber]?.[i],
-                      phaseThumbnail(phase.phaseNumber, i),
-                    ),
-                  )}
-                  beforeCheck={
-                    phase.toFinish ? (
-                      <ToFinishCard
-                        title={phase.toFinish.title}
-                        duration={phase.toFinish.duration}
-                      >
-                        {phase.toFinish.body}
-                      </ToFinishCard>
-                    ) : undefined
-                  }
-                >
-                  {decoratedQuickCheck && (
-                    <QuickCheck
-                      title={decoratedQuickCheck.title}
-                      items={decoratedQuickCheck.items}
-                    />
-                  )}
-                </TabbedPhase>
-              </Container>
-            </section>
+            <Fragment key={phase.phaseNumber}>
+              <section
+                id={`phase-${phase.phaseNumber}`}
+                className="border-b border-brand-navy/8 bg-cream"
+              >
+                <Container size="xl" className="py-20 sm:py-28">
+                  <TabbedPhase
+                    phaseNumber={phase.phaseNumber}
+                    title={phase.title}
+                    time={phase.time}
+                    description={phase.description}
+                    overview={overview}
+                    steps={phase.microSteps.map((step, i) =>
+                      toTabbedPhaseStep(
+                        step,
+                        microStepVideos[phase.phaseNumber]?.[i],
+                        phaseThumbnail(phase.phaseNumber, i),
+                      ),
+                    )}
+                    beforeCheck={
+                      phase.toFinish ? (
+                        <ToFinishCard
+                          title={phase.toFinish.title}
+                          duration={phase.toFinish.duration}
+                        >
+                          {phase.toFinish.body}
+                        </ToFinishCard>
+                      ) : undefined
+                    }
+                  />
+                </Container>
+              </section>
+              {decoratedQuickCheck && (
+                <QuickCheck
+                  title={decoratedQuickCheck.title}
+                  items={decoratedQuickCheck.items}
+                />
+              )}
+            </Fragment>
           );
         })}
 
@@ -375,6 +374,7 @@ export default function FormPage() {
           </Container>
         </section>
       </main>
+      <Footer />
     </>
   );
 }

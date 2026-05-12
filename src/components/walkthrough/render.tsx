@@ -41,7 +41,7 @@ export function renderDarkCallouts(
     const accent =
       c.kind === "pro-tip"
         ? { border: "border-brand-green", label: "text-brand-green", labelText: "Pro tip" }
-        : { border: "border-brand-orange", label: "text-brand-orange", labelText: "Watch out" };
+        : { border: "border-brand-yellow", label: "text-brand-yellow", labelText: "Watch out" };
     return (
       <div
         key={i}

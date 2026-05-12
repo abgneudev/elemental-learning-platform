@@ -1,10 +1,10 @@
+import type React from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import {
   Container,
   StepBar,
-  VideoDialog,
   WistiaPlayer,
   buttonStyles,
 } from "@/components/primitives";
@@ -20,6 +20,8 @@ import {
 } from "@/components/walkthrough";
 import { walkthrough } from "@/lib/content";
 import { renderDarkCallouts } from "@/components/walkthrough/render";
+import { Footer } from "@/components/landing/footer";
+import { bathSetupImages, heatImages, setupCheckImages } from "@/lib/assets";
 
 const setup = walkthrough.setup;
 
@@ -109,24 +111,36 @@ export default function SetupPage() {
         </section>
 
         {/* ── Step A: Bath Setup ────────────────────────────────────────── */}
-        <section id="bath-setup" className="border-b border-brand-navy/8 bg-cream">
-          <Container size="xl" className="py-20 sm:py-28">
-            <SetupTabbedSection
-              section={setup.details.find((d) => d.id === "bath-setup")!}
-              phaseNumber={1}
+        <SetupStep
+          section={setup.details.find((d) => d.id === "bath-setup")!}
+          phaseNumber={1}
+          checkImages={setupCheckImages.slice(0, 2)}
+          stepImages={bathSetupImages.map((img, i) => (
+            <Image
+              key={i}
+              src={img.src}
+              alt={img.alt}
+              fill
+              sizes="(max-width: 1024px) 100vw, 45vw"
+              className="h-full w-full object-cover"
             />
-          </Container>
-        </section>
+          ))}
+        />
 
         {/* ── Step B: Material Prep ─────────────────────────────────────── */}
-        <section id="material-prep" className="border-b border-brand-navy/8 bg-cream">
-          <Container size="xl" className="py-20 sm:py-28">
-            <SetupTabbedSection
-              section={setup.details.find((d) => d.id === "material-prep")!}
-              phaseNumber={2}
+        <SetupStep
+          section={setup.details.find((d) => d.id === "material-prep")!}
+          phaseNumber={2}          checkImages={setupCheckImages.slice(2, 4)}          stepImages={heatImages.map((img, i) => (
+            <Image
+              key={i}
+              src={img.src}
+              alt={img.alt}
+              fill
+              sizes="(max-width: 1024px) 100vw, 45vw"
+              className="h-full w-full object-cover"
             />
-          </Container>
-        </section>
+          ))}
+        />
 
         {/* ── Extra info + step nav (brand-blue) ───────────────────────── */}
         <section className="bg-brand-blue">
@@ -156,58 +170,78 @@ export default function SetupPage() {
           </Container>
         </section>
       </main>
+      <Footer />
     </>
   );
 }
 
-function SetupTabbedSection({
+function SetupStep({
   section,
   phaseNumber,
+  stepImages,
+  checkImages,
 }: {
   section: typeof setup.details[number];
   phaseNumber: number;
+  stepImages?: React.ReactNode[];
+  checkImages?: import("@/lib/assets").CdnImage[];
 }) {
-  const description = (
-    <>
-      {section.lead}
-      {section.wistiaMediaId && (
-        <div className="mt-3">
-          <VideoDialog
-            mediaId={section.wistiaMediaId}
-            title={section.wistiaTitle ?? section.title}
-            buttonLabel="Watch section overview"
-          />
-        </div>
-      )}
-    </>
-  );
-
   const steps: TabbedPhaseStep[] =
-    section.microSteps?.map((step) => ({
+    section.microSteps?.map((step, i) => ({
       title: step.title,
       bullets: step.bullets,
       callouts:
         step.callouts && step.callouts.length > 0
           ? renderDarkCallouts(step.callouts)
           : undefined,
+      image: stepImages?.[i],
       imageLabel: typeof step.title === "string" ? step.title : undefined,
     })) ?? [];
 
+  const overview = section.wistiaMediaId
+    ? {
+        image: (
+          <WistiaPlayer
+            mediaId={section.wistiaMediaId}
+            title={section.wistiaTitle ?? section.title}
+            fillContainer
+          />
+        ),
+      }
+    : undefined;
+
   return (
-    <TabbedPhase
-      phaseNumber={phaseNumber}
-      title={section.title}
-      description={description}
-      steps={steps}
-    >
+    <>
+      <section id={section.id} className="border-b border-brand-navy/8 bg-cream">
+        <Container size="xl" className="py-20 sm:py-28">
+          <TabbedPhase
+            phaseNumber={phaseNumber}
+            title={section.title}
+            description={section.lead}
+            overview={overview}
+            steps={steps}
+          />
+        </Container>
+      </section>
       {section.quickCheck && (
         <QuickCheck
           label={section.quickCheck.label}
           title={section.quickCheck.title}
-          items={section.quickCheck.items}
+          items={section.quickCheck.items.map((item, i) => ({
+            ...item,
+            image: checkImages?.[i] ? (
+              <Image
+                src={checkImages[i].src}
+                alt={checkImages[i].alt}
+                fill
+                sizes="(max-width: 768px) 100vw, 25vw"
+                className="h-full w-full object-cover"
+              />
+            ) : undefined,
+          }))}
         />
       )}
-    </TabbedPhase>
+    </>
   );
 }
 

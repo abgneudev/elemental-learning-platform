@@ -228,6 +228,44 @@ export const teamImage: CdnImage = {
   alt: "Elemental support team.",
 };
 
+/** Setup page — Section A (Bath Setup) step images. */
+export const bathSetupImages: CdnImage[] = [
+  { src: "/images/setup-1.png", alt: "Step 1: Place the cup holder in the bath." },
+  { src: "/images/setup-2.png", alt: "Step 2: Fill the bath with water to the fill line." },
+  { src: "/images/setup-3.png", alt: "Step 3: Fill the cup with water to the fill line." },
+  { src: "/images/setup-4.png", alt: "Step 4: Place the cup in the cup holder." },
+  { src: "/images/setup-5.png", alt: "Step 5: Plug in and turn on the bath, set to 180 °F / 80 °C." },
+  { src: "/images/setup-6.png", alt: "Step 6: Wait while the bath heats — approx. 5 minutes to reach steam." },
+];
+
+/** Setup page — Section B (Material Prep / Heat) step images. */
+export const heatImages: CdnImage[] = [
+  { src: "/images/heat-1.png", alt: "Step 1: Check water in both bath and cup at 180 °F / 80 °C." },
+  { src: "/images/heat-2.png", alt: "Step 2: Wait until the water is steaming." },
+  { src: "/images/heat-3.png", alt: "Step 3: Put on gloves and apply Vaseline to prevent sticking." },
+  { src: "/images/heat-4.png", alt: "Step 4: Pour one sheet of PerioPlast into the cup." },
+  { src: "/images/heat-5.png", alt: "Step 5: Stir the material with forceps for 10 seconds." },
+  { src: "/images/heat-6.png", alt: "Step 6: Granules stick together as the material softens." },
+  { src: "/images/heat-7.png", alt: "Step 7: Pull the softened material off the forceps in one piece." },
+  { src: "/images/heat-8.png", alt: "Step 8: Reheat the cup if the disk needs restarting." },
+];
+
+/** Setup page — QuickCheck reference images. First two map to the bath-setup
+    check, last two map to the material-prep check. */
+export const setupCheckImages: CdnImage[] = [
+  { src: "/images/check-1.png", alt: "Check: cup and bath filled to their fill lines." },
+  { src: "/images/check-2.png", alt: "Check: water is steaming — bath ready to use." },
+  { src: "/images/check-3.png", alt: "Check: material has a soft chewing-gum consistency." },
+  { src: "/images/check-4.png", alt: "Check: disk lifts off the forceps in one piece." },
+];
+
+/** Apply page — Section B (Patient Handoff) step images. */
+export const patientHandoffImages = {
+  first:  { src: "/images/first.png",  alt: "First 24 hours: wear stent non-stop to stabilise the blood clot." } satisfies CdnImage,
+  second: { src: "/images/second.png", alt: "Day 2–4: remove once daily to clean, then place it back." } satisfies CdnImage,
+  third:  { src: "/images/thirds.png", alt: "From day 5: remove the stent once pain-free." } satisfies CdnImage,
+};
+
 /* ---------- SVG icons ------------------------------------------------------ */
 /* Most are decorative duplicates of inline-SVG components we already ship,
    so we only export the ones the new components consume. The blister-pack

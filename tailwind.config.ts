@@ -16,6 +16,7 @@ const config: Config = {
         "brand-cyan": "#caf0f8",
         "brand-mint": "#d6eedb",
         "brand-orange": "#fc9f5b",
+        "brand-yellow": "#f19953",
         "brand-red": "#DD3900",
         cream: "#f8f6f4",
 
@@ -133,14 +134,18 @@ const config: Config = {
         container: "80rem", // 1280px
       },
       borderRadius: {
-        // Per v-d.md: no rounded corners larger than 6px on cards/blocks.
+        // Unified scale — every step is a mathematical scale-up of the last.
+        // Anchored at the larger end (xl = 24px on big panels) and gracefully
+        // toned down for smaller chips/pills. Apply by semantic size, never
+        // hard-code values inline.
         none: "0",
-        xs: "0.125rem",     // 2px
-        sm: "0.25rem",      // 4px
-        DEFAULT: "0.375rem", // 6px — new flat-card default
-        md: "0.375rem",     // 6px (legacy alias re-pointed)
-        lg: "1rem",         // legacy — avoid in new code
-        xl: "1.5rem",       // legacy — avoid in new code
+        xs: "0.25rem",       // 4px  — tiny pill / dot
+        sm: "0.5rem",        // 8px  — chip / small inline
+        DEFAULT: "0.75rem",  // 12px — standard card
+        md: "0.75rem",       // 12px (alias)
+        lg: "1rem",          // 16px — medium card
+        xl: "1.5rem",        // 24px — large card / panel
+        "2xl": "2rem",       // 32px — hero / dominant surface
         full: "9999px",
       },
       borderColor: {

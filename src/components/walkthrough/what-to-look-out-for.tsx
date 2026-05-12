@@ -60,7 +60,7 @@ export function WhatToLookOutFor({
         {items.map((item, i) => (
           <li
             key={i}
-            className="flex flex-col gap-4 border-l-[3px] border-brand-orange pl-4"
+            className="flex flex-col gap-4 border-l-[3px] border-brand-yellow pl-4"
           >
             <div className="relative aspect-[4/3] overflow-hidden bg-[#222525]/4">
               {item.image ?? (

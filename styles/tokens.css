@@ -9,6 +9,7 @@
   --color-brand-cyan: #f1fdff;
   --color-brand-mint: #d6eedb;
   --color-brand-orange: #fc9f5b;
+  --color-brand-yellow: #f19953;
   --color-cream: #f8f6f4;
   --color-brand-grey: #222525;
 
@@ -51,11 +52,15 @@
   --space-24: 6rem;
   --space-32: 8rem;
 
-  /* Radii */
-  --radius-sm: 0.25rem;
-  --radius-md: 0.75rem;
-  --radius-lg: 1rem;
-  --radius-xl: 1.5rem;
+  /* Radii — uniform scale, each step a clean increment from the previous.
+     Larger end is the visual anchor (xl = 24px on big panels); smaller
+     sizes are toned-down versions of the same shape language. */
+  --radius-xs: 0.25rem;   /*  4px */
+  --radius-sm: 0.5rem;    /*  8px */
+  --radius-md: 0.75rem;   /* 12px */
+  --radius-lg: 1rem;      /* 16px */
+  --radius-xl: 1.5rem;    /* 24px */
+  --radius-2xl: 2rem;     /* 32px */
   --radius-full: 9999px;
 
   /* Motion */

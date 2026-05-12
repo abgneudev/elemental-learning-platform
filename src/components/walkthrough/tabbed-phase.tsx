@@ -29,6 +29,15 @@ type TabbedPhaseProps = {
   time?: string;
   /** Optional one-line description under the title. */
   description?: ReactNode;
+  /**
+   * Optional overview tab — renders as the first item in the tab list
+   * ("Overview") with the supplied media shown in the right preview pane.
+   * Numbered micro-steps continue at 1.1, 1.2, ...
+   */
+  overview?: {
+    label?: string;
+    image: ReactNode;
+  };
   /** Tab list. The first step is active by default. */
   steps: TabbedPhaseStep[];
   /** Optional "to finish" card rendered after the panel. */
@@ -52,20 +61,33 @@ function toDateTime(time?: string): string | undefined {
  * a circular play-icon CTA that opens the per-step video in a modal — there is
  * no inline video splash.
  */
+type InternalStep = TabbedPhaseStep & { isOverview?: boolean };
+
 export function TabbedPhase({
   phaseNumber,
   title,
   time,
   description,
+  overview,
   steps,
   beforeCheck,
   children,
   className,
 }: TabbedPhaseProps) {
+  const allSteps: InternalStep[] = overview
+    ? [
+        {
+          title: overview.label ?? "Overview",
+          image: overview.image,
+          isOverview: true,
+        },
+        ...steps,
+      ]
+    : steps;
   const [active, setActive] = useState(0);
   const headingId = `phase-${phaseNumber}-title`;
   const dateTime = toDateTime(time);
-  const activeStep = steps[active];
+  const activeStep = allSteps[active];
 
   return (
     <div className={clsx("flex flex-col gap-10", className)}>
@@ -114,11 +136,14 @@ export function TabbedPhase({
             aria-label={typeof title === "string" ? title : "Phase steps"}
             className="flex flex-col gap-1"
           >
-            {steps.map((step, i) => {
+            {allSteps.map((step, i) => {
               const isActive = i === active;
               const tabId = `phase-${phaseNumber}-tab-${i}`;
               const panelId = `phase-${phaseNumber}-panel-${i}`;
-              const stepNumber = `${phaseNumber}.${i + 1}`;
+              const microIndex = overview ? i - 1 : i;
+              const stepNumber = step.isOverview
+                ? null
+                : `${phaseNumber}.${microIndex + 1}`;
               return (
                 <li key={i}>
                   <div
@@ -157,7 +182,7 @@ export function TabbedPhase({
                             isActive ? "text-white" : "text-cream/70",
                           )}
                         >
-                          / {stepNumber}
+                          {stepNumber ? `/ ${stepNumber}` : ""}
                         </span>
                         <p
                           className={clsx(
@@ -203,7 +228,9 @@ export function TabbedPhase({
           >
             <div className="relative aspect-[4/3] w-full">
               {activeStep.image ? (
-                activeStep.image
+                <div className="absolute inset-0 [&>*]:!aspect-auto [&>*]:!h-full [&>*]:!w-full [&>*]:!rounded-none">
+                  {activeStep.image}
+                </div>
               ) : (
                 <div className="flex h-full w-full items-center justify-center px-6 text-center font-mono text-xs uppercase tracking-eyebrow text-white/40">
                   {activeStep.imageLabel ?? `step ${phaseNumber}.${active + 1}`}

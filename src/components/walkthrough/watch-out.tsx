@@ -27,18 +27,18 @@ export function WatchOut({
   return (
     <details
       className={clsx(
-        "rounded-sm border-l-[3px] border-brand-orange bg-warning/5",
+        "rounded-sm border-l-[3px] border-brand-yellow bg-warning/5",
         className,
       )}
     >
       <summary className="flex items-center gap-3 px-4 py-2.5">
-        <p className="font-mono text-xs font-semibold uppercase tracking-eyebrow text-brand-orange">
+        <p className="font-mono text-xs font-semibold uppercase tracking-eyebrow text-brand-yellow">
           {label}
         </p>
         {title && (
           <p className="font-heading text-sm font-semibold text-brand-navy">{title}</p>
         )}
-        <span aria-hidden="true" className="disclosure-indicator ml-auto text-xs text-brand-orange">
+        <span aria-hidden="true" className="disclosure-indicator ml-auto text-xs text-brand-yellow">
           ▶
         </span>
       </summary>

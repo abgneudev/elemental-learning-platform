@@ -1,5 +1,7 @@
+import type React from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { clsx } from "clsx";
 import {
   Container,
@@ -19,6 +21,21 @@ import {
 } from "@/components/walkthrough";
 import { walkthrough } from "@/lib/content";
 import { renderDarkCallouts } from "@/components/walkthrough/render";
+import { Footer } from "@/components/landing/footer";
+import { patientHandoffImages, type CdnImage } from "@/lib/assets";
+
+/* ---------- Image slot helper -------------------------------------------- */
+function StepPhoto({ image }: { image: CdnImage }) {
+  return (
+    <Image
+      src={image.src}
+      alt={image.alt}
+      fill
+      sizes="(max-width: 1024px) 100vw, 45vw"
+      className="h-full w-full object-cover"
+    />
+  );
+}
 
 const apply = walkthrough.apply;
 
@@ -125,25 +142,21 @@ export default function ApplyPage() {
         </section>
 
         {/* ── Step A: Surgical Protocol ─────────────────────────────────── */}
-        <section id="surgical-protocol" className="border-b border-brand-navy/8 bg-cream">
-          <Container size="xl" className="py-20 sm:py-28">
-            <ApplyTabbedSection section={apply.details[0]} phaseNumber={1} />
-          </Container>
-        </section>
+        <ApplyStep section={apply.details[0]} phaseNumber={1} />
 
         {/* ── Step B: Patient Handoff ───────────────────────────────────── */}
-        <section id="patient-handoff" className="border-b border-brand-navy/8 bg-cream">
-          <Container size="xl" className="py-20 sm:py-28">
-            <ApplyTabbedSection section={apply.details[1]} phaseNumber={2} />
-          </Container>
-        </section>
+        <ApplyStep
+          section={apply.details[1]}
+          phaseNumber={2}
+          stepImages={[
+            <StepPhoto key="first"  image={patientHandoffImages.first}  />,
+            <StepPhoto key="second" image={patientHandoffImages.second} />,
+            <StepPhoto key="third"  image={patientHandoffImages.third}  />,
+          ]}
+        />
 
         {/* ── Step C: Workflow ──────────────────────────────────────────── */}
-        <section id="workflow" className="border-b border-brand-navy/8 bg-cream">
-          <Container size="xl" className="py-20 sm:py-28">
-            <ApplyTabbedSection section={apply.details[2]} phaseNumber={3} />
-          </Container>
-        </section>
+        <ApplyStep section={apply.details[2]} phaseNumber={3} />
 
         {/* ── Extra info + step nav (brand-blue) ───────────────────────── */}
         <section className="bg-brand-blue">
@@ -159,35 +172,44 @@ export default function ApplyPage() {
           </Container>
         </section>
       </main>
+      <Footer />
     </>
   );
 }
 
-function ApplyTabbedSection({
+function ApplyStep({
   section,
   phaseNumber,
+  stepImages,
 }: {
   section: typeof apply.details[number];
   phaseNumber: number;
+  stepImages?: React.ReactNode[];
 }) {
   const steps: TabbedPhaseStep[] =
-    section.microSteps?.map((step) => ({
+    section.microSteps?.map((step, i) => ({
       title: step.title,
       bullets: step.bullets,
       callouts:
         step.callouts && step.callouts.length > 0
           ? renderDarkCallouts(step.callouts)
           : undefined,
+      image: stepImages?.[i],
       imageLabel: typeof step.title === "string" ? step.title : undefined,
     })) ?? [];
 
   return (
-    <TabbedPhase
-      phaseNumber={phaseNumber}
-      title={section.title}
-      description={section.lead}
-      steps={steps}
-    >
+    <>
+      <section id={section.id} className="border-b border-brand-navy/8 bg-cream">
+        <Container size="xl" className="py-20 sm:py-28">
+          <TabbedPhase
+            phaseNumber={phaseNumber}
+            title={section.title}
+            description={section.lead}
+            steps={steps}
+          />
+        </Container>
+      </section>
       {section.quickCheck && (
         <QuickCheck
           label={section.quickCheck.label}
@@ -195,7 +217,7 @@ function ApplyTabbedSection({
           items={section.quickCheck.items}
         />
       )}
-    </TabbedPhase>
+    </>
   );
 }
 
@@ -205,26 +227,73 @@ function ApplyTabbedSection({
 
 function BottomNav({ prev }: { prev?: { href: string; label: string } }) {
   return (
-    <nav
-      aria-label="Step navigation (bottom)"
-      className="flex items-stretch gap-4"
+    <div className="flex flex-col gap-5">
+      <nav
+        aria-label="Step navigation (bottom)"
+        className="flex items-stretch gap-4"
+      >
+        {prev && (
+          <Link
+            href={prev.href}
+            className={buttonStyles("filled-orange", "md")}
+          >
+            <span aria-hidden="true" className="text-xl font-black">
+              ←
+            </span>
+            Back
+          </Link>
+        )}
+        <DoneCard
+          href="https://shop.withelemental.com/products/perioplast-intro-kit"
+          className="flex-1"
+        />
+      </nav>
+      <FinalLessonSecondaryActions />
+    </div>
+  );
+}
+
+/**
+ * Secondary actions surfaced only on the FINAL lesson's success state —
+ * Instagram share + Contact alongside the primary shop CTA above.
+ * Matches the existing on-dark secondary-link pattern from the landing hero.
+ */
+function FinalLessonSecondaryActions() {
+  return (
+    <div
+      role="group"
+      aria-label="Share and contact"
+      className="flex flex-wrap items-center gap-x-6 gap-y-2"
     >
-      {prev && (
-        <Link
-          href={prev.href}
-          className={buttonStyles("filled-orange", "md")}
+      <a
+        // TODO: replace with the real Elemental Instagram handle/tag,
+        // e.g. https://www.instagram.com/withelemental or a stories-share intent.
+        href="https://www.instagram.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-1.5 font-heading text-sm font-medium text-white underline underline-offset-4 decoration-1 decoration-white/50 transition-colors hover:decoration-white"
+      >
+        Share your first stent on Instagram
+        <svg
+          aria-hidden="true"
+          className="h-3.5 w-3.5 flex-none"
+          viewBox="0 0 12 12"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         >
-          <span aria-hidden="true" className="text-xl font-black">
-            ←
-          </span>
-          Back
-        </Link>
-      )}
-      <DoneCard
-        href="https://shop.withelemental.com/products/perioplast-intro-kit"
-        className="flex-1"
-      />
-    </nav>
+          <path d="M2 10L10 2M10 2H4.5M10 2v5.5" />
+        </svg>
+      </a>
+      <Link
+        href="/contact"
+        className="inline-flex items-center gap-1.5 font-heading text-sm font-medium text-white underline underline-offset-4 decoration-1 decoration-white/50 transition-colors hover:decoration-white"
+      >
+        Contact Elemental
+      </Link>
+    </div>
   );
 }
 

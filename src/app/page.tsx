@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { clsx } from "clsx";
 import {
   Container,
   Eyebrow,
@@ -11,6 +10,8 @@ import {
 import { landing } from "@/lib/content";
 import { ExpandableCards } from "@/components/landing/expandable-cards";
 import { Nav } from "@/components/landing/nav";
+import { Footer } from "@/components/landing/footer";
+import { PeerVideoCarousel } from "@/components/landing/peer-video-carousel";
 
 export const metadata: Metadata = {
   title: landing.meta.title,
@@ -26,9 +27,10 @@ export default function HomePage() {
         <ComparisonGrid />
         <ClinicalEvidence />
         <KolEndorsements />
+        <PatientTestimonials />
         <Pricing />
-        <Footer />
       </main>
+      <Footer />
     </>
   );
 }
@@ -345,24 +347,6 @@ function ClinicalEvidence() {
 
 /* ── KOL endorsements + peer reviews ───────────────────────────────── */
 
-const peerReviews = [
-  {
-    quote:
-      "No more stressful suturing in the palate. No post-operative bleeding. It changes the whole feel of the harvest.",
-    attribution: "Periodontist · 14 years' practice",
-  },
-  {
-    quote:
-      "No impressions, no pouring models, no lab coordination. I made my first stent between two cases.",
-    attribution: "Periodontist · 7 years' practice",
-  },
-  {
-    quote:
-      "Patients can eat with it and it's not visible in the smile area. That alone improves the conversation at day one.",
-    attribution: "Periodontist · 22 years' practice",
-  },
-];
-
 function KolEndorsements() {
   return (
     <section
@@ -407,59 +391,69 @@ function KolEndorsements() {
           <p className="text-sm text-brand-navy/50">…and many more.</p>
         </div>
 
-        {/* Peer reviews */}
+        {/* Peer video shorts — horizontally scrollable carousel */}
         <div className="flex flex-col gap-8">
           <div className="flex items-center gap-3">
-              <span aria-hidden="true" className="h-px w-8 flex-none bg-brand-blue" />
+            <span aria-hidden="true" className="h-px w-8 flex-none bg-brand-blue" />
             <Eyebrow tone="blue" size="md">From practitioners</Eyebrow>
           </div>
-          <ul className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-            {peerReviews.map((review, i) => {
-              const isFeatured = i === 0;
-              return (
-                <li key={review.attribution} className="relative">
-                  {isFeatured && (
-                    <span
-                      aria-hidden="true"
-                      className="absolute inset-0 translate-x-2 translate-y-2 rounded-md bg-brand-navy/15"
-                    />
-                  )}
-                  <figure
-                    className={clsx(
-                      "relative flex h-full flex-col justify-between gap-6 rounded-md p-7 sm:p-8",
-                      isFeatured
-                        ? "bg-brand-navy text-white"
-                        : "border border-brand-navy/10 bg-brand-navy/5 text-brand-navy",
-                    )}
-                  >
-                    <span
-                      aria-hidden="true"
-                      className={clsx("font-heading text-3xl font-bold leading-none", isFeatured ? "text-white/40" : "text-brand-navy/25")}
-                    >
-                      “
-                    </span>
-                    <blockquote className="flex-1">
-                      <p className={clsx("text-base leading-relaxed", isFeatured ? "text-white/90" : "text-brand-navy/85")}>
-                        {review.quote}
-                      </p>
-                    </blockquote>
-                    <figcaption className={clsx("flex items-center justify-between border-t pt-4", isFeatured ? "border-white/15" : "border-brand-navy/10")}>
-                      <cite className={clsx("text-xs not-italic", isFeatured ? "text-white/60" : "text-brand-navy/55")}>
-                        {review.attribution}
-                      </cite>
-                      <span
-                        aria-hidden="true"
-                        className={clsx("font-mono text-xs tracking-eyebrow", isFeatured ? "text-white/45" : "text-brand-navy/40")}
-                      >
-                        / 0{i + 1}
-                      </span>
-                    </figcaption>
-                  </figure>
-                </li>
-              );
-            })}
-          </ul>
+          <PeerVideoCarousel
+            items={landing.peerReviews}
+            heading={
+              <h3 className="font-heading text-2xl font-bold leading-tight tracking-tight text-brand-navy sm:text-3xl">
+                Hear it in their own words.
+              </h3>
+            }
+          />
         </div>
+      </Container>
+    </section>
+  );
+}
+
+/* ── Patient testimonials ──────────────────────────────────────────── */
+
+function PatientTestimonials() {
+  return (
+    <section
+      aria-labelledby="patients-title"
+      className="border-b border-brand-navy/8 bg-cream py-20 sm:py-24"
+    >
+      <Container size="xl" className="flex flex-col gap-12">
+        <header className="max-w-2xl">
+          <div className="flex items-center gap-3">
+            <span aria-hidden="true" className="h-px w-8 flex-none bg-brand-orange" />
+            <Eyebrow tone="orange" size="md">From patients</Eyebrow>
+          </div>
+          <h2
+            id="patients-title"
+            className="mt-4 font-heading text-3xl font-bold leading-tight tracking-tight text-brand-navy sm:text-4xl"
+          >
+            What it feels like on the receiving end.
+          </h2>
+        </header>
+        <ul className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+          {landing.patientTestimonials.map((t, i) => (
+            <li key={`${t.name}-${i}`}>
+              <figure className="flex h-full flex-col gap-5 border-l-2 border-brand-orange/60 bg-white p-7 sm:p-8">
+                <blockquote className="flex-1">
+                  <p className="text-base leading-relaxed text-brand-navy/85">
+                    {t.quote}
+                  </p>
+                </blockquote>
+                <figcaption className="flex flex-col gap-0.5 border-t border-brand-navy/10 pt-4">
+                  <cite className="font-heading text-sm font-semibold not-italic text-brand-navy">
+                    {t.name}
+                  </cite>
+                  <span className="text-xs text-brand-navy/55">
+                    {t.context}
+                    {t.procedureDate ? ` · ${t.procedureDate}` : ""}
+                  </span>
+                </figcaption>
+              </figure>
+            </li>
+          ))}
+        </ul>
       </Container>
     </section>
   );
@@ -567,33 +561,6 @@ function Pricing() {
 }
 
 
-
-/* ── Footer ─────────────────────────────────────────────────────────── */
-
-function Footer() {
-  return (
-    <footer className="border-t border-[#222525]/8 bg-white py-8">
-      <Container
-        size="xl"
-        className="flex flex-col items-start justify-between gap-4 text-sm sm:flex-row sm:items-center"
-      >
-        <p className="font-heading text-sm font-bold text-brand-navy/70">Elemental</p>
-        <p className="text-brand-navy/40">© Elemental. All rights reserved.</p>
-        <nav aria-label="Legal" className="flex items-center gap-5 text-brand-navy/55">
-          <Link href="/legal/privacy" className="transition-colors hover:text-brand-navy">
-            Privacy
-          </Link>
-          <Link href="/legal/terms" className="transition-colors hover:text-brand-navy">
-            Terms
-          </Link>
-          <Link href="/walkthrough/setup" className="transition-colors hover:text-brand-navy">
-            Walkthrough
-          </Link>
-        </nav>
-      </Container>
-    </footer>
-  );
-}
 
 /* ── Helpers ────────────────────────────────────────────────────────── */
 
